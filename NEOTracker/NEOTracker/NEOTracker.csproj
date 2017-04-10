@@ -101,8 +101,11 @@
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Views\Visualization.xaml.cs">
-      <DependentUpon>Visualization.xaml</DependentUpon>
+    <Compile Include="Views\MasterDetailViewPage.xaml.cs">
+      <DependentUpon>MasterDetailViewPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SpaceViewPage.xaml.cs">
+      <DependentUpon>SpaceViewPage.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -116,6 +119,9 @@
     <Content Include="Assets\icons\noun_705445_cc.svg" />
     <Content Include="Assets\icons\noun_705445_cc_modified.png" />
     <Content Include="Assets\icons\noun_900888_cc.svg" />
+    <Content Include="Assets\icons\noun_923839_cc.png" />
+    <Content Include="Assets\icons\noun_923839_cc_modified.png" />
+    <Content Include="Assets\icons\noun_966844_cc_modified.png" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />
@@ -138,7 +144,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\Visualization.xaml">
+    <Page Include="Views\MasterDetailViewPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\SpaceViewPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

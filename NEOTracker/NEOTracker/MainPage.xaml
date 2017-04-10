@@ -8,7 +8,7 @@
     xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
     mc:Ignorable="d">
     <Page.Resources>
-        <DataTemplate x:Key="HamburgerMenuItem" x:DataType="toolkit:HamburgerMenuGlyphItem">
+        <DataTemplate x:Key="HamburgerMenuItem" x:DataType="local:View">
             <Grid Width="240" Height="48">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="48" />
@@ -16,9 +16,9 @@
                 </Grid.ColumnDefinitions>
                 <Image Grid.Column="0" 
                           Margin="12,12,11,12" 
-                          Source="{Binding Glyph}" />
+                          Source="{Binding Icon}" />
                 <TextBlock Grid.Column="1" 
-                           Text="{x:Bind Label}" 
+                           Text="{x:Bind Title}" 
                            Foreground="White" 
                            FontSize="16" 
                            VerticalAlignment="Center" />
@@ -29,22 +29,23 @@
     
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <toolkit:HamburgerMenu OpenPaneLength="240"
-                               DisplayMode="CompactOverlay"
+        <toolkit:HamburgerMenu Name="Menu"
+                               OpenPaneLength="240"
+                               PaneBackground="#222529"
+                               DisplayMode="Overlay"
                                CompactPaneLength="48"
                                HamburgerHeight="48"
                                HamburgerVisibility="Visible"
                                IsPaneOpen="False"
-                               ItemTemplate="{StaticResource HamburgerMenuItem}">
-
-            <toolkit:HamburgerMenu.ItemsSource>
-                <toolkit:HamburgerMenuItemCollection>
-                    <toolkit:HamburgerMenuGlyphItem Label="Visualization" Glyph="/Assets/icons/noun_900888_cc.svg"/>
-                </toolkit:HamburgerMenuItemCollection>
-            </toolkit:HamburgerMenu.ItemsSource>
+                               ItemTemplate="{StaticResource HamburgerMenuItem}"
+                               ItemClick="Menu_ItemClick">
 
             <Grid>
-                <Frame x:Name="MainFrame"></Frame>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="48"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                </Grid.RowDefinitions>
+                <Frame x:Name="MainFrame" Grid.Row="1"></Frame>
             </Grid>
 
         </toolkit:HamburgerMenu>
