@@ -1,0 +1,74 @@
+﻿<Page
+    x:Class="SpaceViewTest.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:SpaceViewTest"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    mc:Ignorable="d">
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <Pivot>
+            <PivotItem Header="Solar">
+                <local:SpaceView Background="Black" x:Name="solar">
+                    <local:SpaceView.ItemsSource>
+                        <local:SpaceViewItemCollection>
+                            <local:SpaceViewItem  Distance="0" Diameter="0.024619077" Label="Mercury"></local:SpaceViewItem>
+                            <local:SpaceViewItem  Distance="0.2" Diameter="0.081446786" Label="Earth" Image="ms-appx:///solar/earth.gif"></local:SpaceViewItem>
+                            <local:SpaceViewItem  Distance="0.8" Diameter="0" Label="Pluto"></local:SpaceViewItem>
+                            <local:SpaceViewItem  Distance="0.3" Diameter="0.03835256" Label="Jupiter"></local:SpaceViewItem>
+                            <local:SpaceViewItem  Distance="0.7" Diameter="0.345288692" Label="Neptune"></local:SpaceViewItem>
+                            <local:SpaceViewItem  Distance="0.5" Diameter="0.831164889" Label="Saturn"></local:SpaceViewItem>
+                            <local:SpaceViewItem  Distance="0.6" Diameter="0.327073756" Label="Uranus"></local:SpaceViewItem>
+                            <local:SpaceViewItem  Distance="0.1" Diameter="0.076835227" Label="Venus"></local:SpaceViewItem>
+                            <local:SpaceViewItem  Distance="0.4" Diameter="1" Label="Jupiter" Image="ms-appx:///solar/jupiter.gif"></local:SpaceViewItem>
+                        </local:SpaceViewItemCollection>
+                    </local:SpaceView.ItemsSource>
+                    <Ellipse Height="100" Width="100" >
+                        <Ellipse.Fill>
+                            <ImageBrush ImageSource="solar/sun.gif"></ImageBrush>
+                        </Ellipse.Fill>
+                    </Ellipse>
+                </local:SpaceView>
+            </PivotItem>
+            <PivotItem Header="People">
+                <local:SpaceView x:Name="people">
+                    <local:SpaceView.ItemTemplate>
+                        <DataTemplate x:DataType="local:SpaceViewItem">
+                            <Grid Height="60" Width="60">
+                                <controls:DropShadowPanel Color="Black" BlurRadius="20">
+                                    <Ellipse>
+                                        <Ellipse.Fill>
+                                            <ImageBrush ImageSource="{x:Bind Image}"></ImageBrush>
+                                        </Ellipse.Fill>
+                                    </Ellipse>
+                                </controls:DropShadowPanel>
+                            </Grid>
+                        </DataTemplate>
+                    </local:SpaceView.ItemTemplate>
+                    <local:SpaceView.ItemsSource>
+                        <local:SpaceViewItemCollection>
+                            <local:SpaceViewItem Image="pic/david.png" Distance="0.2"></local:SpaceViewItem>
+                            <local:SpaceViewItem Image="pic/jeff.png" Distance="0.4"></local:SpaceViewItem>
+                            <local:SpaceViewItem Image="pic/dave.png" Distance="0.8"></local:SpaceViewItem>
+                        </local:SpaceViewItemCollection>
+                    </local:SpaceView.ItemsSource>
+                    <Grid>
+                        <controls:DropShadowPanel>
+                            <Ellipse Fill="White" Height="105" Width="105" Stroke="Black" StrokeThickness="2"></Ellipse>
+                        </controls:DropShadowPanel>
+                        <Ellipse Height="100" Width="100" VerticalAlignment="Center" HorizontalAlignment="Center">
+                            <Ellipse.Fill>
+                                <ImageBrush ImageSource="pic/nikola.png"></ImageBrush>
+                            </Ellipse.Fill>
+                        </Ellipse>
+                    </Grid>
+                </local:SpaceView>
+            </PivotItem>
+            <PivotItem Header="Network">
+                
+            </PivotItem>
+        </Pivot>
+    </Grid>
+</Page>
