@@ -1,0 +1,3 @@
+[submodule "WebRocks"]
+	path = WebRocks
+	url = https://github.com/jbristowe/WebRocks.git
