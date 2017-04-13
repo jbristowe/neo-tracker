@@ -9,7 +9,7 @@
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <Pivot>
+        <!--<Pivot>
             <PivotItem Header="Solar">
                 <local:SpaceView Background="Black" x:Name="solar">
                     <local:SpaceView.ItemsSource>
@@ -32,7 +32,7 @@
                     </Ellipse>
                 </local:SpaceView>
             </PivotItem>
-            <PivotItem Header="People">
+            <PivotItem Header="People">-->
                 <local:SpaceView x:Name="people" AreOrbitsEnabled="True">
                     <local:SpaceView.ItemTemplate>
                         <DataTemplate x:DataType="local:SpaceViewItem">
@@ -50,9 +50,9 @@
                     <local:SpaceView.ItemsSource>
                         <local:SpaceViewItemCollection>
                         <local:SpaceViewItem Image="pic/shen.png" Distance="0.1"></local:SpaceViewItem>
-                        <local:SpaceViewItem Image="pic/david.png" Distance="0.2"></local:SpaceViewItem>
-                            <local:SpaceViewItem Image="pic/jeff.png" Distance="0.4"></local:SpaceViewItem>
-                            <local:SpaceViewItem Image="pic/dave.png" Distance="0.8"></local:SpaceViewItem>
+                        <!--<local:SpaceViewItem Image="pic/david.png" Distance="0.2"></local:SpaceViewItem>
+                    <local:SpaceViewItem Image="pic/jeff.png" Distance="0.4"></local:SpaceViewItem>
+                            <local:SpaceViewItem Image="pic/dave.png" Distance="0.8"></local:SpaceViewItem>-->
                         </local:SpaceViewItemCollection>
                     </local:SpaceView.ItemsSource>
                     <Grid>
@@ -66,10 +66,10 @@
                         </Ellipse>
                     </Grid>
                 </local:SpaceView>
-            </PivotItem>
+            <!--</PivotItem>
             <PivotItem Header="Network">
                 
             </PivotItem>
-        </Pivot>
+        </Pivot>-->
     </Grid>
 </Page>

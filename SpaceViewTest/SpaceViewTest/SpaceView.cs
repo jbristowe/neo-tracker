@@ -263,8 +263,8 @@ namespace SpaceViewTest
 
                 var distance = (item.Distance) * (maxDistance - minDistance) + minDistance;
 
-                var x = distance * Math.Cos(angle * i + angle/2);
-                var y = distance * Math.Sin(angle * i + angle/2);
+                var x = distance * Math.Cos(angle * i + 3* angle/4 + Math.PI / 4);
+                var y = distance * Math.Sin(angle * i + 3* angle/4 + Math.PI / 4);
 
                 Canvas.SetTop(control, centerTop(control, y));
                 Canvas.SetLeft(control, centerLeft(control, x));
@@ -279,12 +279,12 @@ namespace SpaceViewTest
 
                 //_propertySet.InsertVector3("centerPoint", new Vector3((float)_canvas.ActualWidth / 2, (float)_canvas.ActualHeight / 2, 0));
 
-                //if (anchorNeeded)
-                //{
-                //    var anchor = CreateAnchor(control, x, y);
-                //    _anchors.Add(anchor);
-                //    _canvas.Children.Add(anchor);
-                //}
+                if (anchorNeeded)
+                {
+                    var anchor = CreateAnchor(control, x, y);
+                    _anchors.Add(anchor);
+                    _canvas.Children.Add(anchor);
+                }
 
                 //var anchor = _anchors.ElementAt(i);
                 //anchor.X1 = (controlWidth / 2);
@@ -389,31 +389,48 @@ namespace SpaceViewTest
             var elementVisual = ElementCompositionPreview.GetElementVisual(element);
             var centerVisual = ElementCompositionPreview.GetElementVisual(Content as UIElement);
 
+            
+
+            string expression = "";
+            var elementY = "(elementVisual.Offset.Y + elementVisual.Size.Y / 2)";
+            var centerY = "(centerVisual.Offset.Y + centerVisual.Size.Y / 2)";
+            var elementX = "(elementVisual.Offset.X + elementVisual.Size.X / 2)";
+            var centerX = "(centerVisual.Offset.X + centerVisual.Size.X / 2)";
+
+            var invertedElementX = "(elementVisual.Offset.X + elementVisual.Size.Y / 2)";
+            var invertedElementY = "(elementVisual.Offset.Y + elementVisual.Size.X / 2)";
+
+            var startingAngle = Math.Atan2(y, x);
+
+            if (startingAngle > Math.PI / 4 && startingAngle < 3 * Math.PI / 4)
+                expression = $"Atan((-1 * {elementX} - {centerX}) / ( {elementY} - {centerY})) + PI / 2";
+            else if (startingAngle >= 3 * Math.PI / 4 || startingAngle < -3 * Math.PI / 4)
+                expression = $"Atan(({elementY} - {centerY}) / ({elementX} - {centerX})) + PI";
+            else if (startingAngle >= -3 * Math.PI / 4 && startingAngle < Math.PI / -4)
+                expression = $"Atan(({elementX} - {centerX}) / (-1 * {invertedElementY} - {centerY}))";
+            else
+                expression = $"Atan(({elementY} - {centerY}) / ({elementX} - {centerX}))";
+            
+            anchorVisual.CenterPoint = new Vector3(0);
+            var rotationExpression = _compositor.CreateExpressionAnimation();
+            rotationExpression.Expression = expression;
+            rotationExpression.SetReferenceParameter("centerVisual", centerVisual);
+            rotationExpression.SetReferenceParameter("elementVisual", elementVisual);
+            anchorVisual.StartAnimation(nameof(anchorVisual.RotationAngle), rotationExpression);
+
             var offsetExpression = _compositor.CreateExpressionAnimation();
             offsetExpression.Expression = "Vector3(centerVisual.Offset.X + centerVisual.Size.X / 2, centerVisual.Offset.Y + centerVisual.Size.Y / 2, 0)";
             offsetExpression.SetReferenceParameter("centerVisual", centerVisual);
             anchorVisual.StartAnimation(nameof(anchorVisual.Offset), offsetExpression);
 
-            string expression = "";
-            var yValue = "((elementVisual.Offset.Y + elementVisual.Size.Y) - (centerVisual.Offset.Y + centerVisual.Size.Y))";
-            var xValue = "((elementVisual.Offset.X + elementVisual.Size.X) - (centerVisual.Offset.X + centerVisual.Size.X))";
+            var scaleExpression = _compositor.CreateExpressionAnimation();
+            scaleExpression.Expression = $"Vector3(Pow(Pow({elementX} - {centerX}, 2) + Pow({elementY} - {centerY}, 2), 0.5)/100, 1, 1)";
+            scaleExpression.SetReferenceParameter("centerVisual", centerVisual);
+            scaleExpression.SetReferenceParameter("elementVisual", elementVisual);
+            anchorVisual.StartAnimation(nameof(anchorVisual.Scale), scaleExpression);
 
-            if (x > 0)
-                expression = $"Atan({yValue} / {xValue})";
-            else if (x < 0 && y >= 0)
-                expression = $"Atan({yValue} / {xValue}) + Pi";
-            else if (x < 0 && y < 0)
-                expression = $"Atan({yValue} / {xValue}) - Pi";
-            else if (x == 0 && y > 0)
-
-            anchorVisual.CenterPoint = new Vector3(0);
-            var rotationExpression = _compositor.CreateExpressionAnimation();
             //rotationExpression.Expression = "Acos((elementVisual.Offset.X - centerVisual.Offset.X) / " +
             //                                "Pow(Pow(elementVisual.Offset.X - centerVisual.Offset.X, 2) + Pow(elementVisual.Offset.Y - centerVisual.Offset.Y, 2), 0.5))";
-            rotationExpression.Expression = expression;
-            rotationExpression.SetReferenceParameter("centerVisual", centerVisual);
-            rotationExpression.SetReferenceParameter("elementVisual", elementVisual);
-            anchorVisual.StartAnimation(nameof(anchorVisual.RotationAngle), rotationExpression);
 
             return anchor;
         }
