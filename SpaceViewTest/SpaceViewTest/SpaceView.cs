@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.UI;
+using Windows.UI.Composition;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Automation;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Documents;
+using Windows.UI.Xaml.Hosting;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
@@ -21,6 +24,11 @@ namespace SpaceViewTest
     public sealed class SpaceView : ContentControl
     {
         private Canvas _canvas;
+        private Compositor _compositor;
+
+        List<ContentControl> _elements;
+        List<Ellipse> _orbits;
+        List<Ellipse> _anchors;
 
         public SpaceView()
         {
@@ -50,6 +58,8 @@ namespace SpaceViewTest
                 return;
             }
 
+            _compositor = ElementCompositionPreview.GetElementVisual(_canvas).Compositor;
+
             CreateItems();
             _canvas.SizeChanged += _canvas_SizeChanged;
 
@@ -58,7 +68,7 @@ namespace SpaceViewTest
 
         private void _canvas_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            UpdateItems();
+            PositionItems();
         }
 
         public IEnumerable<SpaceViewItem> ItemsSource
@@ -81,6 +91,50 @@ namespace SpaceViewTest
         public static readonly DependencyProperty ItemTemplateProperty =
             DependencyProperty.Register("ItemTemplate", typeof(DataTemplate), typeof(SpaceView), new PropertyMetadata(null));
 
+
+
+        public bool AreOrbitsEnabled
+        {
+            get { return (bool)GetValue(AreOrbitsEnabledProperty); }
+            set { SetValue(AreOrbitsEnabledProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for AreOrbitsEnabled.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty AreOrbitsEnabledProperty =
+            DependencyProperty.Register("AreOrbitsEnabled", typeof(bool), typeof(SpaceView), new PropertyMetadata(false, OnOrbitsEnabledChanged));
+
+
+
+        public bool AreAnchorsEnabled
+        {
+            get { return (bool)GetValue(AreAnchorsEnabledProperty); }
+            set { SetValue(AreAnchorsEnabledProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for AreAnchorsEnabled.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty AreAnchorsEnabledProperty =
+            DependencyProperty.Register("AreAnchorsEnabled", typeof(bool), typeof(SpaceView), new PropertyMetadata(false));
+
+
+
+        private static void OnOrbitsEnabledChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var sv = d as SpaceView;
+
+            if (e.NewValue == e.OldValue) return;
+
+            if ((bool)e.NewValue)
+            {
+                sv.CreateOrbits();
+                sv.PositionItems();
+            }
+            else
+            {
+                sv.ClearOrbits();
+                sv.PositionItems();
+            }
+        }
+
         private static void OnItemsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             if (e.NewValue == null) return;
@@ -94,8 +148,6 @@ namespace SpaceViewTest
 
             control.CreateItems();
         }
-
-        List<ContentControl> elements;
 
         private void CreateItems()
         {
@@ -111,16 +163,25 @@ namespace SpaceViewTest
                     Fill = new SolidColorBrush(Colors.LightBlue)
                 };
             }
+
+            var batch = _compositor.CreateScopedBatch(CompositionBatchTypes.Animation);
+
+            var delayCount = 0;
+
+            ApplyImplicitOffsetAnimation(Content as FrameworkElement, delayCount++ * 40);
             _canvas.Children.Add(Content as FrameworkElement);
 
-            if (elements != null)
+            if (_elements != null)
             {
-                elements.Clear();
+                _elements.Clear();
             }
             else
             {
-                elements = new List<ContentControl>();
+                _elements = new List<ContentControl>();
             }
+
+            if (_orbits != null) _orbits.Clear();
+            else _orbits = new List<Ellipse>();
 
             if (ItemsSource != null && ItemsSource.Count() > 0)
             {
@@ -128,15 +189,21 @@ namespace SpaceViewTest
                 {
                     var control = CreateItem(item);
                     control.SetValue(AutomationProperties.NameProperty, item.Label);
+                    ApplyImplicitOffsetAnimation(control, delayCount++ * 40);
                     _canvas.Children.Add(control);
-                    elements.Add(control);
+                    _elements.Add(control);
                 }
             }
 
-            UpdateItems();
+            if (AreOrbitsEnabled)
+            {
+                CreateOrbits();
+            }
+
+            PositionItems();
         }
 
-        private void UpdateItems()
+        private void PositionItems()
         {
             if (_canvas == null) return;
             _canvas.InvalidateMeasure();
@@ -150,7 +217,7 @@ namespace SpaceViewTest
             Canvas.SetTop(Content as FrameworkElement, centerTop(Content as FrameworkElement, 0));
             Canvas.SetLeft(Content as FrameworkElement, centerLeft(Content as FrameworkElement, 0));
 
-            var count = elements.Count();
+            var count = _elements.Count();
             var angle = 2 * Math.PI / count;
 
             var minDiameter = 10;
@@ -163,16 +230,25 @@ namespace SpaceViewTest
 
             for (var i = 0; i < count; i++)
             {
-                var control = elements.ElementAt(i);
+                var control = _elements.ElementAt(i);
+
                 var item = control.DataContext as SpaceViewItem;
 
                 var distance = (item.Distance) * (maxDistance - minDistance) + minDistance;
 
-                var x = distance * Math.Cos(angle * i);
-                var y = distance * Math.Sin(angle * i);
+                var x = distance * Math.Cos(angle * i + angle/2);
+                var y = distance * Math.Sin(angle * i + angle/2);
 
                 Canvas.SetTop(control, centerTop(control, y));
                 Canvas.SetLeft(control, centerLeft(control, x));
+
+                if (AreOrbitsEnabled)
+                {
+                    var orbit = _orbits.ElementAt(i);
+                    orbit.Height = orbit.Width = 2 * distance;
+                    Canvas.SetTop(orbit, centerTop(orbit, 0));
+                    Canvas.SetLeft(orbit, centerLeft(orbit, 0));
+                }
             }
         }
 
@@ -212,5 +288,67 @@ namespace SpaceViewTest
             return control;
         }
 
+        private Ellipse CreateOrbit()
+        {
+            var ellipse = new Ellipse()
+            {
+                StrokeDashArray = { 5, 5 },
+                Stroke = new SolidColorBrush(Colors.LightGray),
+                StrokeThickness = 2
+            };
+
+            Canvas.SetZIndex(ellipse, -1);
+
+            return ellipse;
+        }
+
+        private void CreateOrbits()
+        {
+            if (_canvas == null) return;
+
+            if (ItemsSource != null && ItemsSource.Count() > 0)
+            {
+                foreach (var item in ItemsSource)
+                {
+                    var orbit = CreateOrbit();
+                    //ApplyImplicitOffsetAnimation(orbit, delayCount++ * 40);
+                    _canvas.Children.Add(orbit);
+                    _orbits.Add(orbit);
+                }
+            }
+        }
+
+        private void ClearOrbits()
+        {
+            if (_canvas == null || _orbits == null) return;
+
+            foreach(var orbit in _orbits)
+            {
+                _canvas.Children.Remove(orbit);
+            }
+
+            _orbits.Clear();
+        }
+
+        private void ApplyImplicitOffsetAnimation(UIElement element, double delay = 0)
+        {
+            // don't use animations if running in designer
+            if (Windows.ApplicationModel.DesignMode.DesignModeEnabled) return;
+
+            if (_compositor == null) return;
+
+            var easeIn = _compositor.CreateCubicBezierEasingFunction(new Vector2(0.03f, 1.11f), new Vector2(.66f, 1.11f));
+
+            var offsetAnimation = _compositor.CreateVector3KeyFrameAnimation();
+            offsetAnimation.Target = nameof(Visual.Offset);
+            offsetAnimation.InsertExpressionKeyFrame(1.0f, "this.FinalValue", easeIn);
+            offsetAnimation.Duration = TimeSpan.FromMilliseconds(200);
+            offsetAnimation.DelayTime = TimeSpan.FromMilliseconds(delay);
+
+            var implicitAnimations = _compositor.CreateImplicitAnimationCollection();
+            implicitAnimations[nameof(Visual.Offset)] = offsetAnimation;
+
+            ElementCompositionPreview.GetElementVisual(element).ImplicitAnimations = implicitAnimations;
+        }
     }
 }

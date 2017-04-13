@@ -26,19 +26,5 @@ namespace SpaceViewTest
         {
             this.InitializeComponent();
         }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            if (solar.Visibility == Visibility.Collapsed)
-            {
-                solar.Visibility = Visibility.Visible;
-                people.Visibility = Visibility.Collapsed;
-            }
-            else
-            {
-                people.Visibility = Visibility.Visible;
-                solar.Visibility = Visibility.Collapsed;
-            }
-        }
     }
 }

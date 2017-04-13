@@ -33,7 +33,7 @@
                 </local:SpaceView>
             </PivotItem>
             <PivotItem Header="People">
-                <local:SpaceView x:Name="people">
+                <local:SpaceView x:Name="people" AreOrbitsEnabled="True">
                     <local:SpaceView.ItemTemplate>
                         <DataTemplate x:DataType="local:SpaceViewItem">
                             <Grid Height="60" Width="60">
@@ -49,7 +49,8 @@
                     </local:SpaceView.ItemTemplate>
                     <local:SpaceView.ItemsSource>
                         <local:SpaceViewItemCollection>
-                            <local:SpaceViewItem Image="pic/david.png" Distance="0.2"></local:SpaceViewItem>
+                        <local:SpaceViewItem Image="pic/shen.png" Distance="0.1"></local:SpaceViewItem>
+                        <local:SpaceViewItem Image="pic/david.png" Distance="0.2"></local:SpaceViewItem>
                             <local:SpaceViewItem Image="pic/jeff.png" Distance="0.4"></local:SpaceViewItem>
                             <local:SpaceViewItem Image="pic/dave.png" Distance="0.8"></local:SpaceViewItem>
                         </local:SpaceViewItemCollection>
