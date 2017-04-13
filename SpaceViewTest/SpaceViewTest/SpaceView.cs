@@ -28,7 +28,7 @@ namespace SpaceViewTest
 
         List<ContentControl> _elements;
         List<Ellipse> _orbits;
-        List<Ellipse> _anchors;
+        List<Line> _anchors;
 
         public SpaceView()
         {
@@ -183,6 +183,9 @@ namespace SpaceViewTest
             if (_orbits != null) _orbits.Clear();
             else _orbits = new List<Ellipse>();
 
+            if (_anchors != null) _anchors.Clear();
+            else _anchors = new List<Line>();
+
             if (ItemsSource != null && ItemsSource.Count() > 0)
             {
                 foreach (var item in ItemsSource)
@@ -200,8 +203,30 @@ namespace SpaceViewTest
                 CreateOrbits();
             }
 
+            //CreateAnchors();
+           // Windows.UI.Xaml.Media.CompositionTarget.Rendering += CompositionTarget_Rendering;
+
             PositionItems();
         }
+
+        //private void CompositionTarget_Rendering(object sender, object e)
+        //{
+        //    var count = _elements.Count();
+        //    for (var i = 0; i < count; i++)
+        //    {
+        //        var control = _elements.ElementAt(i);
+        //        var visual = ElementCompositionPreview.GetElementVisual(control);
+
+        //        var controlWidth = _canvas.ActualWidth;
+        //        var controlHeight = _canvas.ActualHeight;
+
+        //        var anchor = _anchors.ElementAt(i);
+        //        anchor.X1 = (controlWidth / 2);
+        //        anchor.Y1 = (controlHeight / 2);
+        //        anchor.X2 = visual.Offset.X;
+        //        anchor.Y2 = visual.Offset.Y;
+        //    }
+        //}
 
         private void PositionItems()
         {
@@ -228,6 +253,8 @@ namespace SpaceViewTest
 
             var random = new Random();
 
+            bool anchorNeeded = _anchors.Count == 0;
+
             for (var i = 0; i < count; i++)
             {
                 var control = _elements.ElementAt(i);
@@ -249,6 +276,21 @@ namespace SpaceViewTest
                     Canvas.SetTop(orbit, centerTop(orbit, 0));
                     Canvas.SetLeft(orbit, centerLeft(orbit, 0));
                 }
+
+                //_propertySet.InsertVector3("centerPoint", new Vector3((float)_canvas.ActualWidth / 2, (float)_canvas.ActualHeight / 2, 0));
+
+                //if (anchorNeeded)
+                //{
+                //    var anchor = CreateAnchor(control, x, y);
+                //    _anchors.Add(anchor);
+                //    _canvas.Children.Add(anchor);
+                //}
+
+                //var anchor = _anchors.ElementAt(i);
+                //anchor.X1 = (controlWidth / 2);
+                //anchor.Y1 = (controlHeight / 2);
+                //anchor.X2 = (controlWidth / 2) + x;
+                //anchor.Y2 = (controlHeight / 2) - y;
             }
         }
 
@@ -328,6 +370,102 @@ namespace SpaceViewTest
             }
 
             _orbits.Clear();
+        }
+
+        private Line CreateAnchor(UIElement element, double x, double y)
+        {
+            var anchor = new Line()
+            {
+                Stroke = new SolidColorBrush(Colors.LightGray),
+                X1 = 0,
+                Y1 = 0,
+                X2 = 100,
+                Y2 = 0
+            };
+
+            Canvas.SetZIndex(anchor, -1);
+
+            var anchorVisual = ElementCompositionPreview.GetElementVisual(anchor);
+            var elementVisual = ElementCompositionPreview.GetElementVisual(element);
+            var centerVisual = ElementCompositionPreview.GetElementVisual(Content as UIElement);
+
+            var offsetExpression = _compositor.CreateExpressionAnimation();
+            offsetExpression.Expression = "Vector3(centerVisual.Offset.X + centerVisual.Size.X / 2, centerVisual.Offset.Y + centerVisual.Size.Y / 2, 0)";
+            offsetExpression.SetReferenceParameter("centerVisual", centerVisual);
+            anchorVisual.StartAnimation(nameof(anchorVisual.Offset), offsetExpression);
+
+            string expression = "";
+            var yValue = "((elementVisual.Offset.Y + elementVisual.Size.Y) - (centerVisual.Offset.Y + centerVisual.Size.Y))";
+            var xValue = "((elementVisual.Offset.X + elementVisual.Size.X) - (centerVisual.Offset.X + centerVisual.Size.X))";
+
+            if (x > 0)
+                expression = $"Atan({yValue} / {xValue})";
+            else if (x < 0 && y >= 0)
+                expression = $"Atan({yValue} / {xValue}) + Pi";
+            else if (x < 0 && y < 0)
+                expression = $"Atan({yValue} / {xValue}) - Pi";
+            else if (x == 0 && y > 0)
+
+            anchorVisual.CenterPoint = new Vector3(0);
+            var rotationExpression = _compositor.CreateExpressionAnimation();
+            //rotationExpression.Expression = "Acos((elementVisual.Offset.X - centerVisual.Offset.X) / " +
+            //                                "Pow(Pow(elementVisual.Offset.X - centerVisual.Offset.X, 2) + Pow(elementVisual.Offset.Y - centerVisual.Offset.Y, 2), 0.5))";
+            rotationExpression.Expression = expression;
+            rotationExpression.SetReferenceParameter("centerVisual", centerVisual);
+            rotationExpression.SetReferenceParameter("elementVisual", elementVisual);
+            anchorVisual.StartAnimation(nameof(anchorVisual.RotationAngle), rotationExpression);
+
+            return anchor;
+        }
+
+        CompositionPropertySet _propertySet;
+
+        //private void CreateAnchors()
+        //{
+        //    if (_canvas == null) return;
+
+        //    _propertySet = _compositor.CreatePropertySet();
+        //    _propertySet.InsertVector3("centerPoint", new Vector3((float)_canvas.ActualWidth / 2, (float)_canvas.ActualHeight / 2, 0));
+
+        //    var centerVisual = ElementCompositionPreview.GetElementVisual(Content as UIElement);
+
+        //    if (ItemsSource != null && ItemsSource.Count() > 0)
+        //    {
+        //        foreach (var element in _elements)
+        //        {
+        //            var anchor = CreateAnchor();
+        //            _canvas.Children.Add(anchor);
+        //            _anchors.Add(anchor);
+        //            var anchorVisual = ElementCompositionPreview.GetElementVisual(anchor);
+
+        //            var elementVisual = ElementCompositionPreview.GetElementVisual(element);
+        //            var offsetExpression = _compositor.CreateExpressionAnimation();
+        //            offsetExpression.Expression = "Vector3(centerVisual.Offset.X + centerVisual.Size.X / 2, centerVisual.Offset.Y + centerVisual.Size.Y / 2, 0)";
+        //            offsetExpression.SetReferenceParameter("centerVisual", centerVisual);
+        //            anchorVisual.StartAnimation(nameof(anchorVisual.Offset), offsetExpression);
+
+        //            anchorVisual.CenterPoint = new Vector3(0);
+        //            var rotationExpression = _compositor.CreateExpressionAnimation();
+        //            //rotationExpression.Expression = "Acos((elementVisual.Offset.X - centerVisual.Offset.X) / " +
+        //            //                                "Pow(Pow(elementVisual.Offset.X - centerVisual.Offset.X, 2) + Pow(elementVisual.Offset.Y - centerVisual.Offset.Y, 2), 0.5))";
+        //            rotationExpression.Expression = "Atan2(elementVisual.Offset.X - centerVisual.Offset.X, elementVisual.Offset.Y - centerVisual.Offset.Y)";
+        //            rotationExpression.SetReferenceParameter("centerVisual", centerVisual);
+        //            rotationExpression.SetReferenceParameter("elementVisual", elementVisual);
+        //            anchorVisual.StartAnimation(nameof(anchorVisual.RotationAngle), rotationExpression);
+        //        }
+        //    }
+        //}
+
+        private void ClearAnchors()
+        {
+            if (_canvas == null || _anchors == null) return;
+
+            foreach (var anchor in _anchors)
+            {
+                _canvas.Children.Remove(anchor);
+            }
+
+            _anchors.Clear();
         }
 
         private void ApplyImplicitOffsetAnimation(UIElement element, double delay = 0)
