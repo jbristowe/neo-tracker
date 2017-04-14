@@ -9,7 +9,7 @@
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <!--<Pivot>
+        <Pivot>
             <PivotItem Header="Solar">
                 <local:SpaceView Background="Black" x:Name="solar">
                     <local:SpaceView.ItemsSource>
@@ -32,8 +32,8 @@
                     </Ellipse>
                 </local:SpaceView>
             </PivotItem>
-            <PivotItem Header="People">-->
-                <local:SpaceView x:Name="people" AreOrbitsEnabled="True">
+            <PivotItem Header="People">
+                <local:SpaceView x:Name="people" AreOrbitsEnabled="True" IsItemClickEnabled="True" ItemClicked="people_ItemClicked">
                     <local:SpaceView.ItemTemplate>
                         <DataTemplate x:DataType="local:SpaceViewItem">
                             <Grid Height="60" Width="60">
@@ -49,10 +49,10 @@
                     </local:SpaceView.ItemTemplate>
                     <local:SpaceView.ItemsSource>
                         <local:SpaceViewItemCollection>
-                        <local:SpaceViewItem Image="pic/shen.png" Distance="0.1"></local:SpaceViewItem>
-                        <!--<local:SpaceViewItem Image="pic/david.png" Distance="0.2"></local:SpaceViewItem>
-                    <local:SpaceViewItem Image="pic/jeff.png" Distance="0.4"></local:SpaceViewItem>
-                            <local:SpaceViewItem Image="pic/dave.png" Distance="0.8"></local:SpaceViewItem>-->
+                        <local:SpaceViewItem Image="pic/shen.png" Distance="0.1" Label="Shen"></local:SpaceViewItem>
+                        <local:SpaceViewItem Image="pic/david.png" Distance="0.2" Label="David"></local:SpaceViewItem>
+                        <local:SpaceViewItem Image="pic/jeff.png" Distance="0.4" Label="Jeff"></local:SpaceViewItem>
+                        <local:SpaceViewItem Image="pic/dave.png" Distance="0.8" Label="Dave"></local:SpaceViewItem>
                         </local:SpaceViewItemCollection>
                     </local:SpaceView.ItemsSource>
                     <Grid>
@@ -66,10 +66,38 @@
                         </Ellipse>
                     </Grid>
                 </local:SpaceView>
-            <!--</PivotItem>
-            <PivotItem Header="Network">
-                
             </PivotItem>
-        </Pivot>-->
+            <PivotItem Header="Network">
+                <local:SpaceView x:Name="devices" AreAnchorsEnabled="True" IsItemClickEnabled="True" ItemClicked="people_ItemClicked">
+                    <local:SpaceView.ItemTemplate>
+                        <DataTemplate x:DataType="local:DeviceItem">
+                            <Grid Height="60" Width="60" Background="White">
+                                <StackPanel>
+                                    <SymbolIcon Symbol="{x:Bind Symbol}" HorizontalAlignment="Center" Height="30"></SymbolIcon>
+                                    <TextBlock Foreground="LightGray" FontSize="10" TextAlignment="Center" Text="{x:Bind Label}"></TextBlock>
+                                </StackPanel>
+                            </Grid>
+                        </DataTemplate>
+                    </local:SpaceView.ItemTemplate>
+                    <local:SpaceView.ItemsSource>
+                        <local:SpaceViewItemCollection>
+                            <local:DeviceItem Distance="0.1" Label="My Phone" Symbol="CellPhone"></local:DeviceItem>
+                            <local:DeviceItem Distance="0.5" Label="His Phone" Symbol="CellPhone"></local:DeviceItem>
+                            <local:DeviceItem Distance="0.3" Label="Your Phone" Symbol="CellPhone"></local:DeviceItem>
+                        </local:SpaceViewItemCollection>
+                    </local:SpaceView.ItemsSource>
+                    <Grid>
+                        <controls:DropShadowPanel>
+                            <Ellipse Fill="White" Height="105" Width="105" Stroke="Black" StrokeThickness="2"></Ellipse>
+                        </controls:DropShadowPanel>
+                        <Ellipse Height="100" Width="100" VerticalAlignment="Center" HorizontalAlignment="Center">
+                            <Ellipse.Fill>
+                                <ImageBrush ImageSource="pic/nikola.png"></ImageBrush>
+                            </Ellipse.Fill>
+                        </Ellipse>
+                    </Grid>
+                </local:SpaceView>
+            </PivotItem>
+        </Pivot>
     </Grid>
 </Page>

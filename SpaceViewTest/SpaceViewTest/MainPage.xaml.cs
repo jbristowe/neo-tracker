@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -25,6 +26,11 @@ namespace SpaceViewTest
         public MainPage()
         {
             this.InitializeComponent();
+        }
+
+        private void people_ItemClicked(object sender, SpaceViewItemClickedEventArgs e)
+        {
+            Debug.WriteLine("item clicked: " + (e.Item as SpaceViewItem).Label);
         }
     }
 }

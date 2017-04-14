@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Toolkit.Uwp.UI.Animations;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
@@ -30,6 +31,8 @@ namespace SpaceViewTest
         List<Ellipse> _orbits;
         List<Line> _anchors;
 
+        double _animationDuration = 200;
+
         public SpaceView()
         {
             this.DefaultStyleKey = typeof(SpaceView);
@@ -43,6 +46,8 @@ namespace SpaceViewTest
                 ItemsSource = items;
             }
         }
+
+        public event EventHandler<SpaceViewItemClickedEventArgs> ItemClicked;
 
         protected override void OnApplyTemplate()
         {
@@ -91,7 +96,15 @@ namespace SpaceViewTest
         public static readonly DependencyProperty ItemTemplateProperty =
             DependencyProperty.Register("ItemTemplate", typeof(DataTemplate), typeof(SpaceView), new PropertyMetadata(null));
 
+        //public bool AreAnimationsEnabled
+        //{
+        //    get { return (bool)GetValue(AreAnimationsEnabledProperty); }
+        //    set { SetValue(AreAnimationsEnabledProperty, value); }
+        //}
 
+        //// Using a DependencyProperty as the backing store for AreAnimationsEnabled.  This enables animation, styling, binding, etc...
+        //public static readonly DependencyProperty AreAnimationsEnabledProperty =
+        //    DependencyProperty.Register("AreAnimationsEnabled", typeof(bool), typeof(SpaceView), new PropertyMetadata(true));
 
         public bool AreOrbitsEnabled
         {
@@ -105,6 +118,16 @@ namespace SpaceViewTest
 
 
 
+        public bool IsItemClickEnabled
+        {
+            get { return (bool)GetValue(IsItemClickEnabledProperty); }
+            set { SetValue(IsItemClickEnabledProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for IsItemClickEnabled.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty IsItemClickEnabledProperty =
+            DependencyProperty.Register("IsItemClickEnabled", typeof(bool), typeof(SpaceView), new PropertyMetadata(false, OnItemClickEnabledChanged));
+
         public bool AreAnchorsEnabled
         {
             get { return (bool)GetValue(AreAnchorsEnabledProperty); }
@@ -113,9 +136,24 @@ namespace SpaceViewTest
 
         // Using a DependencyProperty as the backing store for AreAnchorsEnabled.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty AreAnchorsEnabledProperty =
-            DependencyProperty.Register("AreAnchorsEnabled", typeof(bool), typeof(SpaceView), new PropertyMetadata(false));
+            DependencyProperty.Register("AreAnchorsEnabled", typeof(bool), typeof(SpaceView), new PropertyMetadata(false, OnAchorsEnabledChanged));
 
+        private static void OnAchorsEnabledChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var sv = d as SpaceView;
 
+            if (e.NewValue == e.OldValue) return;
+
+            if ((bool)e.NewValue)
+            {
+                sv.PositionItems();
+            }
+            else
+            {
+                sv.ClearAnchors();
+                sv.PositionItems();
+            }
+        }
 
         private static void OnOrbitsEnabledChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
@@ -132,6 +170,27 @@ namespace SpaceViewTest
             {
                 sv.ClearOrbits();
                 sv.PositionItems();
+            }
+        }
+
+        private static void OnItemClickEnabledChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var sv = d as SpaceView;
+
+            if (e.NewValue == e.OldValue) return;
+
+            if (sv._elements == null || sv._elements.Count() == 0) return;
+
+            foreach (var control in sv._elements)
+            {
+                if ((bool)e.NewValue)
+                {
+                    sv.EnableItemInteraction(control);
+                }
+                else
+                {
+                    sv.DisableItemInteraction(control);
+                }
             }
         }
 
@@ -202,31 +261,9 @@ namespace SpaceViewTest
             {
                 CreateOrbits();
             }
-
-            //CreateAnchors();
-           // Windows.UI.Xaml.Media.CompositionTarget.Rendering += CompositionTarget_Rendering;
-
+            
             PositionItems();
         }
-
-        //private void CompositionTarget_Rendering(object sender, object e)
-        //{
-        //    var count = _elements.Count();
-        //    for (var i = 0; i < count; i++)
-        //    {
-        //        var control = _elements.ElementAt(i);
-        //        var visual = ElementCompositionPreview.GetElementVisual(control);
-
-        //        var controlWidth = _canvas.ActualWidth;
-        //        var controlHeight = _canvas.ActualHeight;
-
-        //        var anchor = _anchors.ElementAt(i);
-        //        anchor.X1 = (controlWidth / 2);
-        //        anchor.Y1 = (controlHeight / 2);
-        //        anchor.X2 = visual.Offset.X;
-        //        anchor.Y2 = visual.Offset.Y;
-        //    }
-        //}
 
         private void PositionItems()
         {
@@ -253,7 +290,7 @@ namespace SpaceViewTest
 
             var random = new Random();
 
-            bool anchorNeeded = _anchors.Count == 0;
+            bool anchorNeeded = AreAnchorsEnabled && _anchors.Count == 0;
 
             for (var i = 0; i < count; i++)
             {
@@ -263,8 +300,8 @@ namespace SpaceViewTest
 
                 var distance = (item.Distance) * (maxDistance - minDistance) + minDistance;
 
-                var x = distance * Math.Cos(angle * i + 3* angle/4 + Math.PI / 4);
-                var y = distance * Math.Sin(angle * i + 3* angle/4 + Math.PI / 4);
+                var x = distance * Math.Cos(angle * i + angle/2);
+                var y = distance * Math.Sin(angle * i + angle/2);
 
                 Canvas.SetTop(control, centerTop(control, y));
                 Canvas.SetLeft(control, centerLeft(control, x));
@@ -277,28 +314,18 @@ namespace SpaceViewTest
                     Canvas.SetLeft(orbit, centerLeft(orbit, 0));
                 }
 
-                //_propertySet.InsertVector3("centerPoint", new Vector3((float)_canvas.ActualWidth / 2, (float)_canvas.ActualHeight / 2, 0));
-
                 if (anchorNeeded)
                 {
                     var anchor = CreateAnchor(control, x, y);
                     _anchors.Add(anchor);
                     _canvas.Children.Add(anchor);
                 }
-
-                //var anchor = _anchors.ElementAt(i);
-                //anchor.X1 = (controlWidth / 2);
-                //anchor.Y1 = (controlHeight / 2);
-                //anchor.X2 = (controlWidth / 2) + x;
-                //anchor.Y2 = (controlHeight / 2) - y;
             }
         }
 
         private ContentControl CreateItem(SpaceViewItem item)
         {
             var control = new ContentControl();
-            control.IsTabStop = true;
-            control.UseSystemFocusVisuals = true;
             control.DataContext = item;
 
             FrameworkElement element = ItemTemplate?.LoadContent() as FrameworkElement;
@@ -327,7 +354,82 @@ namespace SpaceViewTest
                 control.Content = element;
             }
 
+            if(IsItemClickEnabled)
+            {
+                EnableItemInteraction(control);
+            }
+
             return control;
+        }
+
+        private void EnableItemInteraction(ContentControl control)
+        {
+            DisableItemInteraction(control);
+
+            control.IsTabStop = true;
+            control.UseSystemFocusVisuals = true;
+            control.PointerEntered += Control_PointerEntered;
+            control.PointerExited += Control_PointerExited;
+            control.PointerPressed += Control_PointerPressed;
+            control.PointerReleased += Control_PointerReleased;
+            control.KeyDown += Control_KeyDown;
+            control.KeyUp += Control_KeyUp;
+        }
+
+        private void DisableItemInteraction(ContentControl control)
+        {
+            control.IsTabStop = false;
+            control.UseSystemFocusVisuals = false;
+            control.PointerEntered -= Control_PointerEntered;
+            control.PointerExited -= Control_PointerExited;
+            control.PointerPressed -= Control_PointerPressed;
+            control.PointerReleased -= Control_PointerReleased;
+            control.KeyDown -= Control_KeyDown;
+            control.KeyUp -= Control_KeyUp;
+        }
+
+        private void Control_KeyUp(object sender, KeyRoutedEventArgs e)
+        {
+            if (e.Key == Windows.System.VirtualKey.Enter || e.Key == Windows.System.VirtualKey.Space || e.Key == Windows.System.VirtualKey.GamepadA)
+            {
+                var item = sender as ContentControl;
+                item.Scale(1, 1, (float)item.ActualWidth / 2, (float)item.ActualHeight / 2, _animationDuration).Start();
+            }
+        }
+
+        private void Control_KeyDown(object sender, KeyRoutedEventArgs e)
+        {
+            if (e.Key == Windows.System.VirtualKey.Enter || e.Key == Windows.System.VirtualKey.Space || e.Key == Windows.System.VirtualKey.GamepadA)
+            {
+                var item = sender as ContentControl;
+                item.Scale(0.9f, 0.9f, (float)item.ActualWidth / 2, (float)item.ActualHeight / 2, _animationDuration).Start();
+                ItemClicked?.Invoke(this, new SpaceViewItemClickedEventArgs(item, item.DataContext));
+            }
+        }
+
+        private void Control_PointerReleased(object sender, PointerRoutedEventArgs e)
+        {
+            var item = sender as ContentControl;
+            item.Scale(1, 1, (float)item.ActualWidth / 2, (float)item.ActualHeight / 2, _animationDuration).Start();
+            ItemClicked?.Invoke(this, new SpaceViewItemClickedEventArgs(item, item.DataContext));
+        }
+
+        private void Control_PointerPressed(object sender, PointerRoutedEventArgs e)
+        {
+            var item = sender as ContentControl;
+            item.Scale(0.9f, 0.9f, (float)item.ActualWidth / 2, (float)item.ActualHeight / 2, _animationDuration).Start();
+        }
+
+        private void Control_PointerExited(object sender, PointerRoutedEventArgs e)
+        {
+            var item = sender as ContentControl;
+            item.Scale(1, 1, (float)item.ActualWidth / 2, (float)item.ActualHeight / 2, _animationDuration).Start();
+        }
+
+        private void Control_PointerEntered(object sender, PointerRoutedEventArgs e)
+        {
+            var item = sender as ContentControl;
+            item.Scale(1.1f, 1.1f, (float)item.ActualWidth / 2, (float)item.ActualHeight / 2, _animationDuration).Start();
         }
 
         private Ellipse CreateOrbit()
@@ -397,17 +499,14 @@ namespace SpaceViewTest
             var elementX = "(elementVisual.Offset.X + elementVisual.Size.X / 2)";
             var centerX = "(centerVisual.Offset.X + centerVisual.Size.X / 2)";
 
-            var invertedElementX = "(elementVisual.Offset.X + elementVisual.Size.Y / 2)";
-            var invertedElementY = "(elementVisual.Offset.Y + elementVisual.Size.X / 2)";
-
             var startingAngle = Math.Atan2(y, x);
 
             if (startingAngle > Math.PI / 4 && startingAngle < 3 * Math.PI / 4)
-                expression = $"Atan((-1 * {elementX} - {centerX}) / ( {elementY} - {centerY})) + PI / 2";
+                expression = $"Atan((-1 * ({elementX} - {centerX})) / ( {elementY} - {centerY})) - PI / 2";
             else if (startingAngle >= 3 * Math.PI / 4 || startingAngle < -3 * Math.PI / 4)
                 expression = $"Atan(({elementY} - {centerY}) / ({elementX} - {centerX})) + PI";
             else if (startingAngle >= -3 * Math.PI / 4 && startingAngle < Math.PI / -4)
-                expression = $"Atan(({elementX} - {centerX}) / (-1 * {invertedElementY} - {centerY}))";
+                expression = $"Atan(({elementX} - {centerX}) / (-1 * ({elementY} - {centerY}))) + PI  / 2";
             else
                 expression = $"Atan(({elementY} - {centerY}) / ({elementX} - {centerX}))";
             
@@ -429,49 +528,8 @@ namespace SpaceViewTest
             scaleExpression.SetReferenceParameter("elementVisual", elementVisual);
             anchorVisual.StartAnimation(nameof(anchorVisual.Scale), scaleExpression);
 
-            //rotationExpression.Expression = "Acos((elementVisual.Offset.X - centerVisual.Offset.X) / " +
-            //                                "Pow(Pow(elementVisual.Offset.X - centerVisual.Offset.X, 2) + Pow(elementVisual.Offset.Y - centerVisual.Offset.Y, 2), 0.5))";
-
             return anchor;
         }
-
-        CompositionPropertySet _propertySet;
-
-        //private void CreateAnchors()
-        //{
-        //    if (_canvas == null) return;
-
-        //    _propertySet = _compositor.CreatePropertySet();
-        //    _propertySet.InsertVector3("centerPoint", new Vector3((float)_canvas.ActualWidth / 2, (float)_canvas.ActualHeight / 2, 0));
-
-        //    var centerVisual = ElementCompositionPreview.GetElementVisual(Content as UIElement);
-
-        //    if (ItemsSource != null && ItemsSource.Count() > 0)
-        //    {
-        //        foreach (var element in _elements)
-        //        {
-        //            var anchor = CreateAnchor();
-        //            _canvas.Children.Add(anchor);
-        //            _anchors.Add(anchor);
-        //            var anchorVisual = ElementCompositionPreview.GetElementVisual(anchor);
-
-        //            var elementVisual = ElementCompositionPreview.GetElementVisual(element);
-        //            var offsetExpression = _compositor.CreateExpressionAnimation();
-        //            offsetExpression.Expression = "Vector3(centerVisual.Offset.X + centerVisual.Size.X / 2, centerVisual.Offset.Y + centerVisual.Size.Y / 2, 0)";
-        //            offsetExpression.SetReferenceParameter("centerVisual", centerVisual);
-        //            anchorVisual.StartAnimation(nameof(anchorVisual.Offset), offsetExpression);
-
-        //            anchorVisual.CenterPoint = new Vector3(0);
-        //            var rotationExpression = _compositor.CreateExpressionAnimation();
-        //            //rotationExpression.Expression = "Acos((elementVisual.Offset.X - centerVisual.Offset.X) / " +
-        //            //                                "Pow(Pow(elementVisual.Offset.X - centerVisual.Offset.X, 2) + Pow(elementVisual.Offset.Y - centerVisual.Offset.Y, 2), 0.5))";
-        //            rotationExpression.Expression = "Atan2(elementVisual.Offset.X - centerVisual.Offset.X, elementVisual.Offset.Y - centerVisual.Offset.Y)";
-        //            rotationExpression.SetReferenceParameter("centerVisual", centerVisual);
-        //            rotationExpression.SetReferenceParameter("elementVisual", elementVisual);
-        //            anchorVisual.StartAnimation(nameof(anchorVisual.RotationAngle), rotationExpression);
-        //        }
-        //    }
-        //}
 
         private void ClearAnchors()
         {
