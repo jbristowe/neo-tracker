@@ -1,6 +1,7 @@
 ﻿using Microsoft.Toolkit.Uwp.UI.Animations;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Numerics;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -28,10 +29,12 @@ namespace SpaceViewTest
         private Compositor _compositor;
 
         List<ContentControl> _elements;
-        List<Ellipse> _orbits;
-        List<Line> _anchors;
+        Dictionary<ContentControl, Ellipse> _orbits;
+        Dictionary<ContentControl, Line> _anchors;
 
         double _animationDuration = 200;
+        double _itemAnimationDelay = 40;
+        double _itemDelayCount = 0;
 
         public SpaceView()
         {
@@ -76,15 +79,15 @@ namespace SpaceViewTest
             PositionItems();
         }
 
-        public IEnumerable<SpaceViewItem> ItemsSource
+        public object ItemsSource
         {
-            get { return (IEnumerable<SpaceViewItem>)GetValue(ItemsSourceProperty); }
+            get { return (object)GetValue(ItemsSourceProperty); }
             set { SetValue(ItemsSourceProperty, value); }
         }
 
         // Using a DependencyProperty as the backing store for ItemsSource.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty ItemsSourceProperty =
-            DependencyProperty.Register("ItemsSource", typeof(IEnumerable<SpaceViewItem>), typeof(SpaceView), new PropertyMetadata(null, OnItemsChanged));
+            DependencyProperty.Register("ItemsSource", typeof(object), typeof(SpaceView), new PropertyMetadata(null, OnItemsChanged));
 
         public DataTemplate ItemTemplate
         {
@@ -161,16 +164,12 @@ namespace SpaceViewTest
 
             if (e.NewValue == e.OldValue) return;
 
-            if ((bool)e.NewValue)
-            {
-                sv.CreateOrbits();
-                sv.PositionItems();
-            }
-            else
-            {
+            if (!(bool)e.NewValue)
+            { 
                 sv.ClearOrbits();
-                sv.PositionItems();
             }
+
+            sv.PositionItems();
         }
 
         private static void OnItemClickEnabledChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -202,10 +201,61 @@ namespace SpaceViewTest
             var control = d as SpaceView;
             if (control == null) return;
 
-            var items = e.NewValue as IEnumerable<SpaceViewItem>;
+            //TODO - make more generic
+            var newValue = e.NewValue as IEnumerable<SpaceViewItem>;
+            if (newValue == null) return;
+
+            control.HandleNewItemsSource(e.OldValue, e.NewValue);
+        }
+
+        private void HandleNewItemsSource(object oldValue, object newValue)
+        {
+            var oldValueObservable = oldValue as INotifyCollectionChanged;
+            if (oldValueObservable != null)
+            {
+                oldValueObservable.CollectionChanged -= ObservableList_CollectionChanged;
+            }
+
+            var items = newValue as IEnumerable<object>;
             if (items == null) return;
 
-            control.CreateItems();
+            var observableList = items as INotifyCollectionChanged;
+            if (observableList != null)
+            {
+                observableList.CollectionChanged += ObservableList_CollectionChanged;
+            }
+
+            CreateItems();
+        }
+
+        private void ObservableList_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            switch (e.Action)
+            {
+                case NotifyCollectionChangedAction.Add:
+                    foreach (var item in e.NewItems)
+                    {
+                        var control = CreateItem(item as SpaceViewItem);
+                        ApplyImplicitOffsetAnimation(control, _itemDelayCount++ * _itemAnimationDelay);
+                        _canvas.Children.Add(control);
+                        _elements.Add(control);
+                    }
+
+                    ClearAnchors();
+
+                    break;
+                case NotifyCollectionChangedAction.Move:
+                    break;
+                case NotifyCollectionChangedAction.Remove:
+                    break;
+                case NotifyCollectionChangedAction.Replace:
+                    break;
+                case NotifyCollectionChangedAction.Reset:
+                    CreateItems();
+                    break;
+            }
+
+            PositionItems();
         }
 
         private void CreateItems()
@@ -225,9 +275,9 @@ namespace SpaceViewTest
 
             var batch = _compositor.CreateScopedBatch(CompositionBatchTypes.Animation);
 
-            var delayCount = 0;
+            _itemDelayCount = 0;
 
-            ApplyImplicitOffsetAnimation(Content as FrameworkElement, delayCount++ * 40);
+            ApplyImplicitOffsetAnimation(Content as FrameworkElement, _itemDelayCount++ * _itemAnimationDelay);
             _canvas.Children.Add(Content as FrameworkElement);
 
             if (_elements != null)
@@ -240,26 +290,23 @@ namespace SpaceViewTest
             }
 
             if (_orbits != null) _orbits.Clear();
-            else _orbits = new List<Ellipse>();
+            else _orbits = new Dictionary<ContentControl, Ellipse>();
 
             if (_anchors != null) _anchors.Clear();
-            else _anchors = new List<Line>();
+            else _anchors = new Dictionary<ContentControl, Line>();
 
-            if (ItemsSource != null && ItemsSource.Count() > 0)
+            //TODO
+            var itemSource = ItemsSource as IEnumerable<SpaceViewItem>;
+
+            if (ItemsSource != null && itemSource.Count() > 0)
             {
-                foreach (var item in ItemsSource)
+                foreach (var item in itemSource)
                 {
                     var control = CreateItem(item);
-                    control.SetValue(AutomationProperties.NameProperty, item.Label);
-                    ApplyImplicitOffsetAnimation(control, delayCount++ * 40);
+                    ApplyImplicitOffsetAnimation(control, _itemDelayCount++ * _itemAnimationDelay);
                     _canvas.Children.Add(control);
                     _elements.Add(control);
                 }
-            }
-
-            if (AreOrbitsEnabled)
-            {
-                CreateOrbits();
             }
             
             PositionItems();
@@ -289,9 +336,7 @@ namespace SpaceViewTest
             var maxDistance = (Math.Min(controlWidth, controlHeight) - maxDiameter) / 2;
 
             var random = new Random();
-
-            bool anchorNeeded = AreAnchorsEnabled && _anchors.Count == 0;
-
+            
             for (var i = 0; i < count; i++)
             {
                 var control = _elements.ElementAt(i);
@@ -308,16 +353,23 @@ namespace SpaceViewTest
 
                 if (AreOrbitsEnabled)
                 {
-                    var orbit = _orbits.ElementAt(i);
+                    if (!_orbits.TryGetValue(control, out var orbit))
+                    {
+                        orbit = CreateOrbit();
+                        _orbits.Add(control, orbit);
+                        _canvas.Children.Add(orbit);
+                    }
+
                     orbit.Height = orbit.Width = 2 * distance;
                     Canvas.SetTop(orbit, centerTop(orbit, 0));
                     Canvas.SetLeft(orbit, centerLeft(orbit, 0));
+
                 }
 
-                if (anchorNeeded)
+                if (AreAnchorsEnabled && !_anchors.ContainsKey(control))
                 {
                     var anchor = CreateAnchor(control, x, y);
-                    _anchors.Add(anchor);
+                    _anchors.Add(control, anchor);
                     _canvas.Children.Add(anchor);
                 }
             }
@@ -327,6 +379,7 @@ namespace SpaceViewTest
         {
             var control = new ContentControl();
             control.DataContext = item;
+            control.SetValue(AutomationProperties.NameProperty, item.Label);
 
             FrameworkElement element = ItemTemplate?.LoadContent() as FrameworkElement;
             if (element == null)
@@ -446,29 +499,13 @@ namespace SpaceViewTest
             return ellipse;
         }
 
-        private void CreateOrbits()
-        {
-            if (_canvas == null) return;
-
-            if (ItemsSource != null && ItemsSource.Count() > 0)
-            {
-                foreach (var item in ItemsSource)
-                {
-                    var orbit = CreateOrbit();
-                    //ApplyImplicitOffsetAnimation(orbit, delayCount++ * 40);
-                    _canvas.Children.Add(orbit);
-                    _orbits.Add(orbit);
-                }
-            }
-        }
-
         private void ClearOrbits()
         {
             if (_canvas == null || _orbits == null) return;
 
             foreach(var orbit in _orbits)
             {
-                _canvas.Children.Remove(orbit);
+                _canvas.Children.Remove(orbit.Value);
             }
 
             _orbits.Clear();
@@ -537,7 +574,7 @@ namespace SpaceViewTest
 
             foreach (var anchor in _anchors)
             {
-                _canvas.Children.Remove(anchor);
+                _canvas.Children.Remove(anchor.Value);
             }
 
             _anchors.Clear();

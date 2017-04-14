@@ -68,35 +68,32 @@
                 </local:SpaceView>
             </PivotItem>
             <PivotItem Header="Network">
-                <local:SpaceView x:Name="devices" AreAnchorsEnabled="True" IsItemClickEnabled="True" ItemClicked="people_ItemClicked">
-                    <local:SpaceView.ItemTemplate>
-                        <DataTemplate x:DataType="local:DeviceItem">
-                            <Grid Height="60" Width="60" Background="White">
-                                <StackPanel>
-                                    <SymbolIcon Symbol="{x:Bind Symbol}" HorizontalAlignment="Center" Height="30"></SymbolIcon>
-                                    <TextBlock Foreground="LightGray" FontSize="10" TextAlignment="Center" Text="{x:Bind Label}"></TextBlock>
-                                </StackPanel>
-                            </Grid>
-                        </DataTemplate>
-                    </local:SpaceView.ItemTemplate>
-                    <local:SpaceView.ItemsSource>
-                        <local:SpaceViewItemCollection>
-                            <local:DeviceItem Distance="0.1" Label="My Phone" Symbol="CellPhone"></local:DeviceItem>
-                            <local:DeviceItem Distance="0.5" Label="His Phone" Symbol="CellPhone"></local:DeviceItem>
-                            <local:DeviceItem Distance="0.3" Label="Your Phone" Symbol="CellPhone"></local:DeviceItem>
-                        </local:SpaceViewItemCollection>
-                    </local:SpaceView.ItemsSource>
-                    <Grid>
-                        <controls:DropShadowPanel>
-                            <Ellipse Fill="White" Height="105" Width="105" Stroke="Black" StrokeThickness="2"></Ellipse>
-                        </controls:DropShadowPanel>
-                        <Ellipse Height="100" Width="100" VerticalAlignment="Center" HorizontalAlignment="Center">
-                            <Ellipse.Fill>
-                                <ImageBrush ImageSource="pic/nikola.png"></ImageBrush>
-                            </Ellipse.Fill>
-                        </Ellipse>
-                    </Grid>
-                </local:SpaceView>
+                <Grid>
+                    <local:SpaceView x:Name="devices" AreAnchorsEnabled="True" IsItemClickEnabled="True" ItemClicked="people_ItemClicked" ItemsSource="{x:Bind Devices}">
+                        <local:SpaceView.ItemTemplate>
+                            <DataTemplate x:DataType="local:DeviceItem">
+                                <Grid Height="60" Width="60" Background="White">
+                                    <StackPanel>
+                                        <SymbolIcon Symbol="{x:Bind Symbol}" HorizontalAlignment="Center" Height="30"></SymbolIcon>
+                                        <TextBlock Foreground="LightGray" FontSize="10" TextAlignment="Center" Text="{x:Bind Label}"></TextBlock>
+                                    </StackPanel>
+                                </Grid>
+                            </DataTemplate>
+                        </local:SpaceView.ItemTemplate>
+                        <Grid>
+                            <controls:DropShadowPanel>
+                                <Ellipse Fill="White" Height="105" Width="105" Stroke="Black" StrokeThickness="2"></Ellipse>
+                            </controls:DropShadowPanel>
+                            <Ellipse Height="100" Width="100" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                <Ellipse.Fill>
+                                    <ImageBrush ImageSource="pic/nikola.png"></ImageBrush>
+                                </Ellipse.Fill>
+                            </Ellipse>
+                        </Grid>
+                    </local:SpaceView>
+
+                    <Button VerticalAlignment="Bottom" HorizontalAlignment="Center" Click="AddDeviceClick">Add Device</Button>
+                </Grid>
             </PivotItem>
         </Pivot>
     </Grid>
