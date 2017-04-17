@@ -60,6 +60,16 @@ namespace WebRocks
             return GetObjectFromResponse<ApiFeedPage>(response, serializer);
         }
 
+        public async Task<ApiFeedPage> GetFeedPageAsync(DateTime startDate)
+        {
+            Uri requestUrl = Config.ApiUrl.ConstructNeowsGetFeedUri(startDate, startDate.AddDays(7), Config.ApiKey);
+            var serializer = Serializers.ApiFeedPage;
+
+            var response = await RequestProvider.SendGetRequestAsync(requestUrl);
+            SetRateLimits(response);
+            return GetObjectFromResponse<ApiFeedPage>(response, serializer);
+        }
+
         public NearEarthObject GetObjectById(int id)
         {
             Uri requestUrl = Config.ApiUrl.ConstructNeowsGetByIdUri(id, Config.ApiKey);
