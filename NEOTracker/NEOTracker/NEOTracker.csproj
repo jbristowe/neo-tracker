@@ -97,6 +97,7 @@
     </Compile>
     <Compile Include="Controls\NEO.cs" />
     <Compile Include="Controls\NEOVisualizer.cs" />
+    <Compile Include="Keys.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
@@ -113,6 +114,7 @@
       <SubType>Designer</SubType>
     </AppxManifest>
     <None Include="NEOTracker_TemporaryKey.pfx" />
+    <None Include="thanks.md" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\icons\noun_705445_cc.png" />
@@ -122,6 +124,7 @@
     <Content Include="Assets\icons\noun_923839_cc.png" />
     <Content Include="Assets\icons\noun_923839_cc_modified.png" />
     <Content Include="Assets\icons\noun_966844_cc_modified.png" />
+    <Content Include="Assets\potw1715a.jpg" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />
@@ -156,6 +159,9 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>5.2.3</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Toolkit.Uwp.Services">
+      <Version>1.4.1</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Controls">
       <Version>1.4.1</Version>

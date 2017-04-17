@@ -8,7 +8,7 @@
     xmlns:neotracker="using:NEOTracker"
     mc:Ignorable="d">
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Grid>
         <neotracker:NEOVisualizer x:Name="Visualizer"></neotracker:NEOVisualizer>
     </Grid>
 </Page>
