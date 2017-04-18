@@ -1,0 +1,80 @@
+﻿<Page
+    x:Class="NEOTracker.Views.GridViewPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:NEOTracker.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:telerikGrid="using:Telerik.UI.Xaml.Controls.Grid"
+    xmlns:neoTrackerControls="using:NEOTracker.Controls"
+    mc:Ignorable="d">
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <telerikGrid:RadDataGrid AutoGenerateColumns="False" UserGroupMode="Disabled" UserColumnReorderMode="None" x:Name="telerikGrid">
+            <telerikGrid:RadDataGrid.Resources>
+                <neoTrackerControls:DeviationStyleSelector x:Key="DeviationForegroundSelector">
+                    <neoTrackerControls:DeviationStyleSelector.PositiveStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Foreground" Value="#FF30E95C"/>
+                            <Setter Property="VerticalAlignment" Value="Center"/>
+                            <Setter Property="Margin" Value="10 0 0 0"/>
+                        </Style>
+                    </neoTrackerControls:DeviationStyleSelector.PositiveStyle>
+                    <neoTrackerControls:DeviationStyleSelector.NegativeStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Foreground" Value="#FFE1525C"/>
+                            <Setter Property="VerticalAlignment" Value="Center"/>
+                            <Setter Property="Margin" Value="10 0 0 0"/>
+                        </Style>
+                    </neoTrackerControls:DeviationStyleSelector.NegativeStyle>
+                </neoTrackerControls:DeviationStyleSelector>
+                <neoTrackerControls:DeviationStyleSelector x:Key="DeviationBackgroundSelector">
+                    <neoTrackerControls:DeviationStyleSelector.PositiveStyle>
+                        <Style TargetType="Rectangle">
+                            <Setter Property="Fill" Value="#2C8B40"/>
+                        </Style>
+                    </neoTrackerControls:DeviationStyleSelector.PositiveStyle>
+                    <neoTrackerControls:DeviationStyleSelector.NegativeStyle>
+                        <Style TargetType="Rectangle">
+                            <Setter Property="Fill" Value="#8B252C"/>
+                        </Style>
+                    </neoTrackerControls:DeviationStyleSelector.NegativeStyle>
+                </neoTrackerControls:DeviationStyleSelector>
+                <neoTrackerControls:DeviationStyleSelector x:Key="DeviationSecondaryBackgroundSelector">
+                    <neoTrackerControls:DeviationStyleSelector.PositiveStyle>
+                        <Style TargetType="Rectangle">
+                            <Setter Property="Fill" Value="#FF30E95C"/>
+                        </Style>
+                    </neoTrackerControls:DeviationStyleSelector.PositiveStyle>
+                    <neoTrackerControls:DeviationStyleSelector.NegativeStyle>
+                        <Style TargetType="Rectangle">
+                            <Setter Property="Fill" Value="#FFE1525C"/>
+                        </Style>
+                    </neoTrackerControls:DeviationStyleSelector.NegativeStyle>
+                </neoTrackerControls:DeviationStyleSelector>
+            </telerikGrid:RadDataGrid.Resources>
+            <telerikGrid:RadDataGrid.Columns>
+                <telerikGrid:DataGridTextColumn Header="ID" PropertyName="NEOReferenceId" CellContentStyleSelector="{StaticResource DeviationForegroundSelector}"  CellDecorationStyleSelector="{StaticResource DeviationBackgroundSelector}" />
+                <telerikGrid:DataGridTextColumn Header="NAME" PropertyName="Name" />
+                <telerikGrid:DataGridTemplateColumn Header="DIAMETER (METERS)">
+                    <telerikGrid:DataGridTemplateColumn.CellContentTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Margin="5" Text="{Binding EstimatedDiameter.Meters.EstimatedDiameterMax }" VerticalAlignment="Center" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </telerikGrid:DataGridTemplateColumn.CellContentTemplate>
+                </telerikGrid:DataGridTemplateColumn>
+                <telerikGrid:DataGridTemplateColumn Header="CLOSE APPROACH">
+                    <telerikGrid:DataGridTemplateColumn.CellContentTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Margin="5" Text="{Binding CloseApproaches[0].CloseApproachDateTime }" VerticalAlignment="Center" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </telerikGrid:DataGridTemplateColumn.CellContentTemplate>
+                </telerikGrid:DataGridTemplateColumn>
+            </telerikGrid:RadDataGrid.Columns>
+        </telerikGrid:RadDataGrid>
+    </Grid>
+</Page>

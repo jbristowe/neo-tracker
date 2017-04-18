@@ -36,6 +36,8 @@ namespace NEOTracker
             List<View> views = new List<View>();
             views.Add(new View() { Title = "Details", Icon = "ms-appx:///Assets/icons/noun_966844_cc_modified.png", PageType = typeof(MasterDetailViewPage) });
             views.Add(new View() { Title = "Space View", Icon = "ms-appx:///Assets/icons/noun_923839_cc_modified.png", PageType = typeof(SpaceViewPage) });
+            views.Add(new View() { Title = "Grid View", Icon = "ms-appx:///Assets/icons/noun_923839_cc_modified.png", PageType = typeof(GridViewPage) });
+            views.Add(new View() { Title = "Chart View", Icon = "ms-appx:///Assets/icons/noun_923839_cc_modified.png", PageType = typeof(ChartViewPage) });
             Menu.ItemsSource = views;
 
             Menu.SelectedIndex = 0;
