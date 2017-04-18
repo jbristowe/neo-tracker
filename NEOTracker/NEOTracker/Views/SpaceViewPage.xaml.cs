@@ -34,12 +34,12 @@ namespace NEOTracker.Views
         {
             base.OnNavigatedTo(e);
 
-            var config = new WebRocks.WebRocksConfiguration();
+            var config = new WebRocks.WebRocksConfiguration(apiKey: Keys.NASAAPIKEY);
             var provider = new WebRocks.Requests.HttpClientNeoRequestProvider();
             var client = new WebRocks.WebRocksClient(config, provider);
+            var results = await client.GetFeedPageAsync(DateTime.Now);
 
-            var results = await client.GetBrowsePageAsync(1, 20);
-            var neos = results.NearEarthObjects.Where(n => n.CloseApproaches.Count() > 0);
+            var neos = results.NearEarthObjects.Select(kv => kv.Value).SelectMany(n => n).Where(n => n.CloseApproaches.Count() > 0);
 
             var minDistance = neos.Min(neo => neo.CloseApproaches.First().MissDistance.Kilometers);
             var maxDistance = neos.Max(neo => neo.CloseApproaches.First().MissDistance.Kilometers);
@@ -54,7 +54,8 @@ namespace NEOTracker.Views
                     Distance = (item.CloseApproaches.First().MissDistance.Kilometers - minDistance) / (maxDistance - minDistance),
                     DiameterWidth = (item.EstimatedDiameter.Kilometers.EstimatedDiameterMax - minDiameter) / (maxDiameter - minDiameter),
                     DiameterHeight = (item.EstimatedDiameter.Kilometers.EstimatedDiameterMin - minDiameter) / (maxDiameter - minDiameter),
-                    Label = item.Name
+                    Label = item.Name,
+                    Item = item
                 };
                 Items.Add(neo);
             }

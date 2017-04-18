@@ -46,13 +46,13 @@ namespace NEOTracker
             if (ApiInformation.IsTypePresent("Windows.UI.ViewManagement.ApplicationView"))
             {
                 CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar = false;
-                //var titleBar = ApplicationView.GetForCurrentView().TitleBar;
-                //if (titleBar != null)
-                //{
-                //    titleBar.ButtonForegroundColor = Colors.White;
-                //    titleBar.ButtonBackgroundColor = Colors.Transparent;
-                //    titleBar.BackgroundColor = Color.FromArgb(255, 13, 15, 30);
-                //}
+                var titleBar = ApplicationView.GetForCurrentView().TitleBar;
+                if (titleBar != null)
+                {
+                    titleBar.ButtonForegroundColor = Colors.White;
+                    titleBar.ButtonBackgroundColor = Color.FromArgb(255, 17, 18, 20);
+                    titleBar.BackgroundColor = Color.FromArgb(255, 17, 18, 20);
+                }
             }
 
             Frame rootFrame = Window.Current.Content as Frame;

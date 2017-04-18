@@ -45,26 +45,20 @@
                         AutomaticallyStart="True"/>
             </interactivity:Interaction.Behaviors>
         </Border>
+        
         <toolkit:HamburgerMenu Name="Menu"
                                OpenPaneLength="240"
                                PaneBackground="#222529"
                                DisplayMode="CompactInline"
                                CompactPaneLength="48"
-                               HamburgerHeight="48"
+                               HamburgerHeight="50"
                                HamburgerVisibility="Visible"
                                IsPaneOpen="False"
                                Foreground="White"
                                ItemTemplate="{StaticResource HamburgerMenuItem}"
                                ItemClick="Menu_ItemClick">
 
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"></RowDefinition>
-                    <RowDefinition Height="*"></RowDefinition>
-                </Grid.RowDefinitions>
-                <!--<Border x:Name="TitleBar" Background="#222529" Height="48"></Border>-->
                 <Frame x:Name="MainFrame" Grid.Row="1"></Frame>
-            </Grid>
 
         </toolkit:HamburgerMenu>
     </Grid>

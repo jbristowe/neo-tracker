@@ -33,13 +33,6 @@ namespace NEOTracker
         {
             base.OnNavigatedTo(e);
 
-            //CoreApplicationViewTitleBar coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
-            //coreTitleBar.ExtendViewIntoTitleBar = true;
-
-            ////Menu.HamburgerHeight = coreTitleBar.Height;
-            ////TitleBar.Height = coreTitleBar.Height;
-            //Window.Current.SetTitleBar(TitleBar);
-
             List<View> views = new List<View>();
             views.Add(new View() { Title = "Details", Icon = "ms-appx:///Assets/icons/noun_966844_cc_modified.png", PageType = typeof(MasterDetailViewPage) });
             views.Add(new View() { Title = "Space View", Icon = "ms-appx:///Assets/icons/noun_923839_cc_modified.png", PageType = typeof(SpaceViewPage) });
@@ -53,6 +46,7 @@ namespace NEOTracker
         {
             var view = e.ClickedItem as View;
             MainFrame.Navigate(view.PageType);
+            MainFrame.BackStack.Clear();
         }
     }
 

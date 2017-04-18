@@ -46,7 +46,7 @@ namespace NEOTracker.Views
             var provider = new WebRocks.Requests.HttpClientNeoRequestProvider();
             var client = new WebRocks.WebRocksClient(config, provider);
 
-            var results = (await client.GetFeedPageAsync(DateTime.Now));
+            var results = await client.GetFeedPageAsync(DateTime.Now);
 
             var group = from neo in (from kv in (from kv in results.NearEarthObjects
                                                  orderby DateTime.Parse(kv.Key)
