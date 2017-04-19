@@ -8,6 +8,8 @@
     xmlns:neotracker="using:NEOTracker"
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:wrapPanel="using:Microsoft.Toolkit.Uwp.UI.Controls.WrapPanel"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:behaviors="using:Microsoft.Toolkit.Uwp.UI.Animations.Behaviors"
     mc:Ignorable="d">
 
     <Grid>
@@ -15,13 +17,13 @@
             <ColumnDefinition Width="*"></ColumnDefinition>
             <ColumnDefinition Width="300"></ColumnDefinition>
         </Grid.ColumnDefinitions>
-        <neotracker:NEOVisualizer x:Name="Visualizer" Margin="20">
+        <neotracker:NEOVisualizer x:Name="Visualizer" Margin="20" MaxItemSize="30" MinItemSize="10">
             <Image Source="ms-appx:///Assets/icons/18238_white.png" Height="100" Width="100"></Image>
-            <neotracker:NEOVisualizer.ItemTemplate>
+            <!--<neotracker:NEOVisualizer.ItemTemplate>
                 <DataTemplate x:DataType="neotracker:NEO">
-                        <Image Source="ms-appx:///Assets/icons/568632_white.png"></Image>
+                    <Ellipse Fill="{x:Bind local:SpaceViewPage.DangerZoneColor(Item)}"></Ellipse>
                 </DataTemplate>
-            </neotracker:NEOVisualizer.ItemTemplate>
+            </neotracker:NEOVisualizer.ItemTemplate>-->
         </neotracker:NEOVisualizer>
         <Grid Grid.Column="1" Margin="0,40,40,40" VerticalAlignment="Top" >
             <Border Background="#4C4B4B4B" CornerRadius="10"></Border>

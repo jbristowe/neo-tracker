@@ -4,10 +4,22 @@
     xmlns:local="using:NEOTracker">
 
     <Style TargetType="local:NEOVisualizer">
+        
+        <!-- NIKO:THEME -->
+        <Setter Property="Background" Value="{ThemeResource SystemAltMediumColor}"></Setter>
+        <Setter Property="Foreground" Value="{ThemeResource SystemBaseHighColor}"></Setter>
+        
+        <!-- NIKO:CONTROLER -->
+        <Setter Property="IsFocusEngagementEnabled" Value="True"></Setter>
+        <Setter Property="UseSystemFocusVisuals" Value="True"></Setter>
+        
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="local:NEOVisualizer">
-                    <Canvas x:Name="Canvas"></Canvas>
+                    <Grid Background="{TemplateBinding Background}">
+                        <Canvas x:Name="Canvas"></Canvas>
+                        <ContentPresenter VerticalAlignment="Center" HorizontalAlignment="Center" Content="{TemplateBinding Content}"></ContentPresenter>
+                    </Grid>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
