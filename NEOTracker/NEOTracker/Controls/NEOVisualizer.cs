@@ -81,6 +81,7 @@ namespace NEOTracker
             }
 
             _canvas.SizeChanged += (s, e) => PositionNEOs();
+            CreateNEOs();
         }
 
         #region dp

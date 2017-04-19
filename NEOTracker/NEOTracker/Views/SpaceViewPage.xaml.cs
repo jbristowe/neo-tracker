@@ -33,14 +33,8 @@ namespace NEOTracker.Views
 
         protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
-            base.OnNavigatedTo(e);
 
-            var config = new WebRocks.WebRocksConfiguration(apiKey: Keys.NASAAPIKEY);
-            var provider = new WebRocks.Requests.HttpClientNeoRequestProvider();
-            var client = new WebRocks.WebRocksClient(config, provider);
-            var results = await client.GetFeedPageAsync(DateTime.Now);
-
-            var neos = results.NearEarthObjects.Select(kv => kv.Value).SelectMany(n => n).Where(n => n.CloseApproaches.Count() > 0);
+            var neos = await Data.Data.GetNEOs();
 
             var minDistance = neos.Min(neo => neo.CloseApproaches.First().MissDistance.Kilometers);
             var maxDistance = neos.Max(neo => neo.CloseApproaches.First().MissDistance.Kilometers);
