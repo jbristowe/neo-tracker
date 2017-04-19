@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Telerik.UI.Xaml.Controls.Chart;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 
@@ -28,7 +27,12 @@ namespace NEOTracker.Views
             var neoData = new List<NeoDataPoint>();
             foreach (var neo in neos)
             {
-                neoData.Add(new NeoDataPoint() { CloseApproachDateTime = neo.CloseApproaches.First().CloseApproachDateTime, EstimatedDiameter = neo.EstimatedDiameter.Meters.EstimatedDiameterMax });
+                neoData.Add(new NeoDataPoint()
+                {
+                    CloseApproachDateTime = neo.CloseApproaches.First().CloseApproachDateTime,
+                    EstimatedDiameter = neo.EstimatedDiameter.Meters.EstimatedDiameterMax,
+                    MissDistance = neo.CloseApproaches.First().MissDistance.Kilometers
+                });
             }
 
             chart.DataContext = neoData;
@@ -38,5 +42,6 @@ namespace NEOTracker.Views
     {
         public DateTime CloseApproachDateTime { get; set; }
         public float EstimatedDiameter { get; set; }
+        public float MissDistance { get; set; }
     }
 }

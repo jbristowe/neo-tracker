@@ -10,20 +10,26 @@
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <telerik:RadCartesianChart Name="chart">
+            <telerik:RadCartesianChart.Behaviors>
+                <telerik:ChartTooltipBehavior />
+            </telerik:RadCartesianChart.Behaviors>
             <telerik:RadCartesianChart.VerticalAxis>
-                <telerik:LinearAxis/>
+                <telerik:LogarithmicAxis Title="Miss Distance" />
             </telerik:RadCartesianChart.VerticalAxis>
             <telerik:RadCartesianChart.HorizontalAxis>
-                <telerik:LinearAxis/>
+                <telerik:DateTimeContinuousAxis Title="Date" LabelFormat="{}{0,0:yyyy}" />
             </telerik:RadCartesianChart.HorizontalAxis>
-            <telerik:ScatterPointSeries ItemsSource="{Binding}">
-                <telerik:ScatterPointSeries.XValueBinding>
+            <telerik:RadCartesianChart.Grid>
+                <telerik:CartesianChartGrid MajorLinesVisibility="XY" />
+            </telerik:RadCartesianChart.Grid>
+            <telerik:PointSeries ItemsSource="{Binding}">
+                <telerik:PointSeries.CategoryBinding>
                     <telerik:PropertyNameDataPointBinding PropertyName="CloseApproachDateTime"/>
-                </telerik:ScatterPointSeries.XValueBinding>
-                <telerik:ScatterPointSeries.YValueBinding>
-                    <telerik:PropertyNameDataPointBinding PropertyName="EstimatedDiameter"/>
-                </telerik:ScatterPointSeries.YValueBinding>
-            </telerik:ScatterPointSeries>
+                </telerik:PointSeries.CategoryBinding>
+                <telerik:PointSeries.ValueBinding>
+                    <telerik:PropertyNameDataPointBinding PropertyName="MissDistance"/>
+                </telerik:PointSeries.ValueBinding>
+            </telerik:PointSeries>
         </telerik:RadCartesianChart>
     </Grid>
 </Page>

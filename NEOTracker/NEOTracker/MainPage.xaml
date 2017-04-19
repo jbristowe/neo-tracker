@@ -46,7 +46,7 @@
             </interactivity:Interaction.Behaviors>
         </Border>
         
-        <toolkit:HamburgerMenu Name="Menu"
+        <toolkit:HamburgerMenu x:Name="Menu"
                                OpenPaneLength="240"
                                PaneBackground="#222529"
                                DisplayMode="CompactInline"
