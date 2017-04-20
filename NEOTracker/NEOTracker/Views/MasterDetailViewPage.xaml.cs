@@ -1,32 +1,18 @@
 ﻿using Microsoft.Toolkit.Uwp.Services.Bing;
-using Microsoft.Toolkit.Uwp.UI.Controls;
+using Microsoft.Toolkit.Uwp.Services.Facebook;
+using Microsoft.Toolkit.Uwp.Services.Twitter;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
-using Microsoft.Toolkit.Uwp.Services.Facebook;
-using Microsoft.Toolkit.Uwp.Services.Twitter;
-
-// The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Navigation;
 
 namespace NEOTracker.Views
 {
-    /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
-    /// </summary>
     public sealed partial class MasterDetailViewPage : Page
     {
         ObservableCollection<WebRocks.Data.NearEarthObject> Items = new ObservableCollection<WebRocks.Data.NearEarthObject>();

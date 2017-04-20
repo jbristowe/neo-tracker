@@ -9,10 +9,10 @@
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:wrapPanel="using:Microsoft.Toolkit.Uwp.UI.Controls.WrapPanel"
     xmlns:rocks="using:WebRocks.Data"
+    xmlns:telerikGrid="using:Telerik.UI.Xaml.Controls.Grid"
     mc:Ignorable="d">
     <Page.Resources>
         <CollectionViewSource x:Key="cvs" x:Name="cvs" IsSourceGrouped="True" />
-
         <DataTemplate x:Key="BingSchemaTemplate"
                       x:DataType="bing:BingResult">
             <Grid Margin="0,5,10,5">
@@ -84,9 +84,37 @@
                                 </ItemsControl>
                             </controls:Expander>
                             <controls:Expander Header="Close Approaches" Visibility="{x:Bind local:MasterDetailViewPage.CloseApproachesToVisibility(CloseApproaches)}">
-                                <ListView ItemsSource="{x:Bind CloseApproaches}">
-                                    
-                                </ListView>
+                                <telerikGrid:RadDataGrid AutoGenerateColumns="False" UserGroupMode="Disabled" UserColumnReorderMode="None" x:Name="telerikGrid" ItemsSource="{x:Bind CloseApproaches}">
+                                    <telerikGrid:RadDataGrid.Columns>
+                                        <telerikGrid:DataGridTemplateColumn Header="DATE">
+                                            <telerikGrid:DataGridTemplateColumn.CellContentTemplate>
+                                                <DataTemplate>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock Margin="5" Text="{Binding CloseApproachDateString }" VerticalAlignment="Center" />
+                                                    </StackPanel>
+                                                </DataTemplate>
+                                            </telerikGrid:DataGridTemplateColumn.CellContentTemplate>
+                                        </telerikGrid:DataGridTemplateColumn>
+                                        <telerikGrid:DataGridTemplateColumn Header="MISS DISTANCE (KM)">
+                                            <telerikGrid:DataGridTemplateColumn.CellContentTemplate>
+                                                <DataTemplate>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock Margin="5" Text="{Binding MissDistance.Kilometers }" VerticalAlignment="Center" />
+                                                    </StackPanel>
+                                                </DataTemplate>
+                                            </telerikGrid:DataGridTemplateColumn.CellContentTemplate>
+                                        </telerikGrid:DataGridTemplateColumn>
+                                        <telerikGrid:DataGridTemplateColumn Header="RELATIVE VELOCITY (KM/H)">
+                                            <telerikGrid:DataGridTemplateColumn.CellContentTemplate>
+                                                <DataTemplate>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock Margin="5" Text="{Binding RelativeVelocity.KilometersPerHour }" VerticalAlignment="Center" />
+                                                    </StackPanel>
+                                                </DataTemplate>
+                                            </telerikGrid:DataGridTemplateColumn.CellContentTemplate>
+                                        </telerikGrid:DataGridTemplateColumn>
+                                    </telerikGrid:RadDataGrid.Columns>
+                                </telerikGrid:RadDataGrid>
                             </controls:Expander>
                             <controls:Expander IsExpanded="False" Header="Share" HorizontalContentAlignment="Stretch">
                                 <StackPanel Orientation="Horizontal" Margin="8">
