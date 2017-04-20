@@ -8,8 +8,7 @@
     xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:behaviors="using:Microsoft.Toolkit.Uwp.UI.Animations.Behaviors"
-    mc:Ignorable="d"
-    RequestedTheme="Dark">
+    mc:Ignorable="d">
     <Page.Resources>
         <DataTemplate x:Key="HamburgerMenuItem" x:DataType="local:View">
             <Grid Width="240" Height="48">

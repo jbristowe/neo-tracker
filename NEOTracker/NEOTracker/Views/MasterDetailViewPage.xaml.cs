@@ -42,26 +42,8 @@ namespace NEOTracker.Views
             base.OnNavigatedTo(e);
             DataTransferManager.GetForCurrentView().DataRequested += DataTransferManager_DataRequested;
 
-            var config = new WebRocks.WebRocksConfiguration(apiKey: Keys.NASAAPIKEY);
-            var provider = new WebRocks.Requests.HttpClientNeoRequestProvider();
-            var client = new WebRocks.WebRocksClient(config, provider);
-
-            var results = await client.GetFeedPageAsync(DateTime.Now);
-
-            var group = from neo in (from kv in (from kv in results.NearEarthObjects
-                                                 orderby DateTime.Parse(kv.Key)
-                                                 select kv)
-                                     from neo in kv.Value
-                                     select neo)
-                        group neo by DateTime.Parse(neo.CloseApproaches.First().CloseApproachDateString);
-                        
-                        
-
-            //foreach (var result in results.NearEarthObjects) foreach (var item in result.Value) Items.Add(item);
-            
-          //  var groups = from item in Items group item by item.CloseApproaches.First().CloseApproachDateString;
+            var group = await Data.Data.GetGroupedNEOs();
             cvs.Source = group;
-            //MasterDetails.SelectedItem = Items.First();
         }
 
         private void DataTransferManager_DataRequested(DataTransferManager sender, DataRequestedEventArgs args)

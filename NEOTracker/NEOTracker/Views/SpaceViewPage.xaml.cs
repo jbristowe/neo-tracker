@@ -6,6 +6,7 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -32,14 +33,8 @@ namespace NEOTracker.Views
 
         protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
-            base.OnNavigatedTo(e);
 
-            var config = new WebRocks.WebRocksConfiguration(apiKey: Keys.NASAAPIKEY);
-            var provider = new WebRocks.Requests.HttpClientNeoRequestProvider();
-            var client = new WebRocks.WebRocksClient(config, provider);
-            var results = await client.GetFeedPageAsync(DateTime.Now);
-
-            var neos = results.NearEarthObjects.Select(kv => kv.Value).SelectMany(n => n).Where(n => n.CloseApproaches.Count() > 0);
+            var neos = await Data.Data.GetNEOs();
 
             var minDistance = neos.Min(neo => neo.CloseApproaches.First().MissDistance.Kilometers);
             var maxDistance = neos.Max(neo => neo.CloseApproaches.First().MissDistance.Kilometers);
@@ -52,8 +47,7 @@ namespace NEOTracker.Views
                 var neo = new NEO()
                 {
                     Distance = (item.CloseApproaches.First().MissDistance.Kilometers - minDistance) / (maxDistance - minDistance),
-                    DiameterWidth = (item.EstimatedDiameter.Kilometers.EstimatedDiameterMax - minDiameter) / (maxDiameter - minDiameter),
-                    DiameterHeight = (item.EstimatedDiameter.Kilometers.EstimatedDiameterMin - minDiameter) / (maxDiameter - minDiameter),
+                    Diameter = (item.EstimatedDiameter.Kilometers.EstimatedDiameterMin - minDiameter) / (maxDiameter - minDiameter),
                     Label = item.Name,
                     Item = item
                 };
@@ -61,6 +55,14 @@ namespace NEOTracker.Views
             }
 
             Visualizer.ItemsSource = Items;
+        }
+
+        public static SolidColorBrush DangerZoneColor(WebRocks.Data.NearEarthObject item)
+        {
+            if (item.IsPotentiallyHazardousAsteroid)
+                return new SolidColorBrush(Colors.Red);
+            else
+                return new SolidColorBrush(Colors.White);
         }
     }
 }
