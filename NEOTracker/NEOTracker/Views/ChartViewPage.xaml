@@ -6,16 +6,16 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:telerik="using:Telerik.UI.Xaml.Controls.Chart"
     mc:Ignorable="d">
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <telerik:RadCartesianChart Name="chart">
+    <Grid Margin="0,5,10,5">
+        <telerik:RadCartesianChart x:Name="chart">
             <telerik:RadCartesianChart.Behaviors>
                 <telerik:ChartTooltipBehavior />
             </telerik:RadCartesianChart.Behaviors>
             <telerik:RadCartesianChart.VerticalAxis>
-                <telerik:LogarithmicAxis Title="Miss Distance" />
+                <telerik:LogarithmicAxis Title="Miss Distance (km)" />
             </telerik:RadCartesianChart.VerticalAxis>
             <telerik:RadCartesianChart.HorizontalAxis>
-                <telerik:DateTimeContinuousAxis Title="Date" LabelFormat="{}{0,0:yyyy}" />
+                <telerik:DateTimeContinuousAxis Title="Year" LabelFormat="{}{0,0:yyyy}" />
             </telerik:RadCartesianChart.HorizontalAxis>
             <telerik:RadCartesianChart.Grid>
                 <telerik:CartesianChartGrid MajorLinesVisibility="XY" />
