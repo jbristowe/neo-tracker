@@ -154,6 +154,13 @@ namespace NEOTracker
                     if (element != newElement) element.Fade(0.3f, control._animationDuration).Start();
                 }
             }
+            else
+            {
+                foreach (var element in control._canvas.Children)
+                {
+                    element.Fade(1f, control._animationDuration).Start();
+                }
+            }
             
         }
 
@@ -265,7 +272,7 @@ namespace NEOTracker
             {
                 var item = sender as ContentControl;
                 item.Scale(1.1f, 1.1f, (float)item.ActualWidth / 2, (float)item.ActualHeight / 2, _animationDuration).Start();
-                SelectedItem = item.DataContext as NEO;
+                SelectedItem = item.DataContext != SelectedItem ? item.DataContext as NEO : null;
             }
         }
 
@@ -285,7 +292,7 @@ namespace NEOTracker
         {
             var item = sender as ContentControl;
             item.Scale(1, 1, (float)item.ActualWidth / 2, (float)item.ActualHeight / 2, _animationDuration).Start();
-            SelectedItem = item.DataContext as NEO;
+            SelectedItem = item.DataContext != SelectedItem ? item.DataContext as NEO : null;
         }
 
         private void Control_PointerPressed(object sender, PointerRoutedEventArgs e)
@@ -309,6 +316,7 @@ namespace NEOTracker
             if (_canvas.Children.IndexOf(item) == 0)
                 item.Offset(r.Next(-50, 50), r.Next(-50, 50), 200).Start();
         }
+
         #endregion
     }
 }
