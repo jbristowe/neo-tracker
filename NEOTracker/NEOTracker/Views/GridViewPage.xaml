@@ -5,11 +5,13 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:neoTrackerControls="using:NEOTracker.Controls"
+    xmlns:converters="using:Microsoft.Toolkit.Uwp.UI.Converters"
     xmlns:telerikGrid="using:Telerik.UI.Xaml.Controls.Grid"
     mc:Ignorable="d">
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <telerikGrid:RadDataGrid AutoGenerateColumns="False" UserGroupMode="Disabled" UserColumnReorderMode="None" x:Name="telerikGrid">
             <telerikGrid:RadDataGrid.Resources>
+                <converters:StringFormatConverter x:Name="StringFormatConverter" />
                 <neoTrackerControls:DeviationStyleSelector x:Key="DeviationForegroundSelector">
                     <neoTrackerControls:DeviationStyleSelector.PositiveStyle>
                         <Style TargetType="TextBlock">
@@ -52,22 +54,39 @@
                 </neoTrackerControls:DeviationStyleSelector>
             </telerikGrid:RadDataGrid.Resources>
             <telerikGrid:RadDataGrid.Columns>
-                <telerikGrid:DataGridTextColumn Header="ID" PropertyName="NEOReferenceId" CellContentStyleSelector="{StaticResource DeviationForegroundSelector}"  CellDecorationStyleSelector="{StaticResource DeviationBackgroundSelector}" />
-                <telerikGrid:DataGridTextColumn Header="NAME" PropertyName="Name" />
-                <telerikGrid:DataGridTemplateColumn Header="DIAMETER (METERS)">
+                <telerikGrid:DataGridTemplateColumn Header="CLOSE APPROACH DATE">
                     <telerikGrid:DataGridTemplateColumn.CellContentTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Margin="5" Text="{Binding EstimatedDiameter.Meters.EstimatedDiameterMax }" VerticalAlignment="Center" />
+                                <TextBlock Margin="5" Text="{Binding CloseApproaches[0].CloseApproachDateTime, Converter={StaticResource StringFormatConverter}, ConverterParameter=\{0:dd/MM/yyyy\}}" VerticalAlignment="Center" />
                             </StackPanel>
                         </DataTemplate>
                     </telerikGrid:DataGridTemplateColumn.CellContentTemplate>
                 </telerikGrid:DataGridTemplateColumn>
-                <telerikGrid:DataGridTemplateColumn Header="CLOSE APPROACH">
+                <telerikGrid:DataGridTextColumn Header="NAME" PropertyName="Name" CellContentStyleSelector="{StaticResource DeviationForegroundSelector}"  CellDecorationStyleSelector="{StaticResource DeviationBackgroundSelector}" />
+                <telerikGrid:DataGridTemplateColumn Header="MISS DISTANCE">
                     <telerikGrid:DataGridTemplateColumn.CellContentTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Margin="5" Text="{Binding CloseApproaches[0].CloseApproachDateTime }" VerticalAlignment="Center" />
+                                <TextBlock Margin="5" Text="{Binding CloseApproaches[0].MissDistance.Kilometers, Converter={StaticResource StringFormatConverter}, ConverterParameter=\{0:0\} km}" VerticalAlignment="Center" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </telerikGrid:DataGridTemplateColumn.CellContentTemplate>
+                </telerikGrid:DataGridTemplateColumn>
+                <telerikGrid:DataGridTemplateColumn Header="DIAMETER">
+                    <telerikGrid:DataGridTemplateColumn.CellContentTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Margin="5" Text="{Binding EstimatedDiameter.Meters.EstimatedDiameterMax, Converter={StaticResource StringFormatConverter}, ConverterParameter=\{0:0\} m}" VerticalAlignment="Center" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </telerikGrid:DataGridTemplateColumn.CellContentTemplate>
+                </telerikGrid:DataGridTemplateColumn>
+                <telerikGrid:DataGridTemplateColumn Header="VELOCITY">
+                    <telerikGrid:DataGridTemplateColumn.CellContentTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Margin="5" Text="{Binding CloseApproaches[0].RelativeVelocity.KilometersPerHour, Converter={StaticResource StringFormatConverter}, ConverterParameter=\{0:0\} km/h}" VerticalAlignment="Center" />
                             </StackPanel>
                         </DataTemplate>
                     </telerikGrid:DataGridTemplateColumn.CellContentTemplate>

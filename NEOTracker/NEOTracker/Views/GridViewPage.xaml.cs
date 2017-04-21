@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 
@@ -15,12 +16,11 @@ namespace NEOTracker.Views
         {
             base.OnNavigatedTo(e);
 
-            var config = new WebRocks.WebRocksConfiguration();
+            var config = new WebRocks.WebRocksConfiguration(apiKey: Keys.NASAAPIKEY);
             var provider = new WebRocks.Requests.HttpClientNeoRequestProvider();
             var client = new WebRocks.WebRocksClient(config, provider);
-
-            var results = await client.GetBrowsePageAsync(1, 20);
-            var neos = results.NearEarthObjects.Where(n => n.CloseApproaches.Count() > 0);
+            var results = await client.GetFeedPageAsync(DateTime.Now);
+            var neos = results.NearEarthObjects.Select(kv => kv.Value).SelectMany(n => n).Where(n => n.CloseApproaches.Count() > 0).OrderBy(n => n.CloseApproaches[0].CloseApproachDateTime);
 
             telerikGrid.ItemsSource = neos;
         }

@@ -15,7 +15,7 @@
                 <telerik:LogarithmicAxis Title="Miss Distance (km)" />
             </telerik:RadCartesianChart.VerticalAxis>
             <telerik:RadCartesianChart.HorizontalAxis>
-                <telerik:DateTimeContinuousAxis Title="Year" LabelFormat="{}{0,0:yyyy}" />
+                <telerik:DateTimeContinuousAxis Title="Date" LabelFormat="{}{0,0:d}" />
             </telerik:RadCartesianChart.HorizontalAxis>
             <telerik:RadCartesianChart.Grid>
                 <telerik:CartesianChartGrid MajorLinesVisibility="XY" />
