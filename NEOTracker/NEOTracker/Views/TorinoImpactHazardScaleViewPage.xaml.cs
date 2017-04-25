@@ -4,9 +4,9 @@ using Windows.UI.Xaml.Navigation;
 
 namespace NEOTracker.Views
 {
-    public sealed partial class EsaRiskListViewPage : Page
+    public sealed partial class TorinoImpactHazardScaleViewPage : Page
     {
-        public EsaRiskListViewPage()
+        public TorinoImpactHazardScaleViewPage()
         {
             InitializeComponent();
         }
