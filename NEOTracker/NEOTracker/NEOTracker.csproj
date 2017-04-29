@@ -98,6 +98,7 @@
     <Compile Include="Controls\DeviationStyleSelector.cs" />
     <Compile Include="Controls\NEO.cs" />
     <Compile Include="Controls\NEOVisualizer.cs" />
+    <Compile Include="Data\CneosData.cs" />
     <Compile Include="Data\Data.cs" />
     <Compile Include="Data\EsaData.cs" />
     <Compile Include="Keys.cs" />
@@ -120,12 +121,18 @@
     <Compile Include="Views\SpaceViewPage.xaml.cs">
       <DependentUpon>SpaceViewPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\TorinoImpactHazardScaleViewPage.xaml.cs">
+      <DependentUpon>TorinoImpactHazardScaleViewPage.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
     <Content Include="Data\esa-list.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\cneos-data.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="NEOTracker_TemporaryKey.pfx" />
@@ -218,6 +225,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\SpaceViewPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\TorinoImpactHazardScaleViewPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

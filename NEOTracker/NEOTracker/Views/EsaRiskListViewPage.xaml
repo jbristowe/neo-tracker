@@ -9,8 +9,8 @@
     mc:Ignorable="d">
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <telerikChart:RadCartesianChart Grid.Row="0">
             <telerikChart:RadCartesianChart.Behaviors>
@@ -27,10 +27,10 @@
             </telerikChart:RadCartesianChart.Grid>
             <telerikChart:PointSeries ItemsSource="{Binding}">
                 <telerikChart:PointSeries.CategoryBinding>
-                    <telerikChart:PropertyNameDataPointBinding PropertyName="CloseApproachDateTime"/>
+                    <telerikChart:PropertyNameDataPointBinding PropertyName="CloseApproachDateTime" />
                 </telerikChart:PointSeries.CategoryBinding>
                 <telerikChart:PointSeries.ValueBinding>
-                    <telerikChart:PropertyNameDataPointBinding PropertyName="PS"/>
+                    <telerikChart:PropertyNameDataPointBinding PropertyName="PS" />
                 </telerikChart:PointSeries.ValueBinding>
             </telerikChart:PointSeries>
         </telerikChart:RadCartesianChart>
@@ -38,11 +38,11 @@
             <telerikGrid:RadDataGrid.Columns>
                 <telerikGrid:DataGridTextColumn Header="OBJECT NAME" PropertyName="Name" />
                 <telerikGrid:DataGridTextColumn Header="SIZE" PropertyName="Size" />
-                <telerikGrid:DataGridTextColumn Header="DATE/TIME" PropertyName="CloseApproachDateTime" />
+                <telerikGrid:DataGridDateColumn Header="DATE/TIME" PropertyName="CloseApproachDateTime" />
                 <telerikGrid:DataGridTextColumn Header="IP" PropertyName="IP" />
-                <telerikGrid:DataGridTextColumn Header="PS" PropertyName="PS" />
+                <telerikGrid:DataGridNumericalColumn Header="PS" PropertyName="PS" />
                 <telerikGrid:DataGridTextColumn Header="TS" PropertyName="TS" />
-                <telerikGrid:DataGridTextColumn Header="VELOCITY" PropertyName="Velocity" />
+                <telerikGrid:DataGridNumericalColumn Header="VELOCITY" PropertyName="Velocity" />
             </telerikGrid:RadDataGrid.Columns>
         </telerikGrid:RadDataGrid>
     </Grid>
