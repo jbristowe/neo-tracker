@@ -4,11 +4,17 @@
     xmlns:local="using:SpaceViewTest">
 
     <Style TargetType="local:SpaceView" >
-        <Setter Property="IsTabStop" Value="False"></Setter>
+        <Setter Property="IsFocusEngagementEnabled" Value="True"></Setter>
+        <Setter Property="UseSystemFocusVisuals" Value="True"></Setter>
+
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="local:SpaceView">
-                    <Canvas x:Name="Canvas" Background="{TemplateBinding Background}"></Canvas>
+                    <Grid Background="{TemplateBinding Background}">
+                        <Canvas x:Name="OrbitsCanvas"></Canvas>
+                        <Canvas x:Name="Canvas"></Canvas>
+                        <ContentPresenter VerticalAlignment="Center" HorizontalAlignment="Center" Content="{TemplateBinding Content}"></ContentPresenter>
+                    </Grid>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>

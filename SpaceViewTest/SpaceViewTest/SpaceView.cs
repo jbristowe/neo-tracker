@@ -25,20 +25,13 @@ namespace SpaceViewTest
     [TemplatePart(Name = "Canvas", Type = typeof(Canvas))]
     public sealed class SpaceView : ContentControl
     {
-        private Canvas _canvas;
-        private Compositor _compositor;
-
-        List<ContentControl> _elements;
-        Dictionary<ContentControl, Ellipse> _orbits;
-        Dictionary<ContentControl, Line> _anchors;
-
-        double _animationDuration = 200;
-        double _itemAnimationDelay = 40;
-        double _itemDelayCount = 0;
-
         public SpaceView()
         {
-            this.DefaultStyleKey = typeof(SpaceView);
+            DefaultStyleKey = typeof(SpaceView);
+
+            IsTabStop = false;
+            TabNavigation = KeyboardNavigationMode.Once;
+            KeyDown += SpaceView_KeyDown;
 
             if (Windows.ApplicationModel.DesignMode.DesignModeEnabled)
             {
@@ -50,26 +43,58 @@ namespace SpaceViewTest
             }
         }
 
+        private Canvas _itemCanvas;
+        private Canvas _orbitsCanvas;
+        private Compositor _compositor;
+        private const double _animationDuration = 200;
+
         public event EventHandler<SpaceViewItemClickedEventArgs> ItemClicked;
+
+        private void SpaceView_KeyDown(object sender, KeyRoutedEventArgs e)
+        {
+            if (e.Key == Windows.System.VirtualKey.Left)
+            {
+                e.Handled = true;
+                var currentEllement = FocusManager.GetFocusedElement() as ContentControl;
+                if (currentEllement != null)
+                {
+                    var index = _itemCanvas.Children.IndexOf(currentEllement);
+                    var nextIndex = (index + 1) % _itemCanvas.Children.Count;
+
+                    (_itemCanvas.Children.ElementAt(nextIndex) as ContentControl).Focus(FocusState.Keyboard);
+                }
+            }
+            else if (e.Key == Windows.System.VirtualKey.Right)
+            {
+                e.Handled = true;
+                var currentEllement = FocusManager.GetFocusedElement() as ContentControl;
+                if (currentEllement != null)
+                {
+                    var index = _itemCanvas.Children.IndexOf(currentEllement);
+                    var nextIndex = index > 0 ? index - 1 : _itemCanvas.Children.Count - 1;
+
+                    (_itemCanvas.Children.ElementAt(nextIndex) as ContentControl).Focus(FocusState.Keyboard);
+                }
+            }
+        }
 
         protected override void OnApplyTemplate()
         {
-            if (_canvas != null)
+            if (_itemCanvas != null)
             {
-                _canvas.SizeChanged -= _canvas_SizeChanged;
+                _itemCanvas.SizeChanged -= _canvas_SizeChanged;
             }
 
-            _canvas = (Canvas)GetTemplateChild("Canvas");
-
-            if (_canvas == null)
+            _itemCanvas = (Canvas)GetTemplateChild("Canvas");
+            if (_itemCanvas == null)
             {
                 return;
             }
 
-            _compositor = ElementCompositionPreview.GetElementVisual(_canvas).Compositor;
+            _compositor = ElementCompositionPreview.GetElementVisual(_itemCanvas).Compositor;
 
             CreateItems();
-            _canvas.SizeChanged += _canvas_SizeChanged;
+            _itemCanvas.SizeChanged += _canvas_SizeChanged;
 
             base.OnApplyTemplate();
         }
@@ -98,16 +123,7 @@ namespace SpaceViewTest
         // Using a DependencyProperty as the backing store for ItemTemplate.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty ItemTemplateProperty =
             DependencyProperty.Register("ItemTemplate", typeof(DataTemplate), typeof(SpaceView), new PropertyMetadata(null));
-
-        //public bool AreAnimationsEnabled
-        //{
-        //    get { return (bool)GetValue(AreAnimationsEnabledProperty); }
-        //    set { SetValue(AreAnimationsEnabledProperty, value); }
-        //}
-
-        //// Using a DependencyProperty as the backing store for AreAnimationsEnabled.  This enables animation, styling, binding, etc...
-        //public static readonly DependencyProperty AreAnimationsEnabledProperty =
-        //    DependencyProperty.Register("AreAnimationsEnabled", typeof(bool), typeof(SpaceView), new PropertyMetadata(true));
+        
 
         public bool AreOrbitsEnabled
         {
@@ -176,19 +192,17 @@ namespace SpaceViewTest
         {
             var sv = d as SpaceView;
 
-            if (e.NewValue == e.OldValue) return;
+            if (sv._itemCanvas == null || sv._itemCanvas.Children.Count == 0) return;
 
-            if (sv._elements == null || sv._elements.Count() == 0) return;
-
-            foreach (var control in sv._elements)
+            foreach (var control in sv._itemCanvas.Children)
             {
                 if ((bool)e.NewValue)
                 {
-                    sv.EnableItemInteraction(control);
+                    sv.EnableItemInteraction(control as ContentControl);
                 }
                 else
                 {
-                    sv.DisableItemInteraction(control);
+                    sv.DisableItemInteraction(control as ContentControl);
                 }
             }
         }
@@ -236,9 +250,8 @@ namespace SpaceViewTest
                     foreach (var item in e.NewItems)
                     {
                         var control = CreateItem(item as SpaceViewItem);
-                        ApplyImplicitOffsetAnimation(control, _itemDelayCount++ * _itemAnimationDelay);
-                        _canvas.Children.Add(control);
-                        _elements.Add(control);
+                        ApplyImplicitOffsetAnimation(control);
+                        _itemCanvas.Children.Add(control);
                     }
 
                     ClearAnchors();
@@ -260,8 +273,8 @@ namespace SpaceViewTest
 
         private void CreateItems()
         {
-            if (_canvas == null) return;
-            _canvas.Children.Clear();
+            if (_itemCanvas == null) return;
+            _itemCanvas.Children.Clear();
 
             if (Content == null)
             {
@@ -275,27 +288,9 @@ namespace SpaceViewTest
 
             var batch = _compositor.CreateScopedBatch(CompositionBatchTypes.Animation);
 
-            _itemDelayCount = 0;
+            ApplyImplicitOffsetAnimation(Content as FrameworkElement);
+            _itemCanvas.Children.Add(Content as FrameworkElement);
 
-            ApplyImplicitOffsetAnimation(Content as FrameworkElement, _itemDelayCount++ * _itemAnimationDelay);
-            _canvas.Children.Add(Content as FrameworkElement);
-
-            if (_elements != null)
-            {
-                _elements.Clear();
-            }
-            else
-            {
-                _elements = new List<ContentControl>();
-            }
-
-            if (_orbits != null) _orbits.Clear();
-            else _orbits = new Dictionary<ContentControl, Ellipse>();
-
-            if (_anchors != null) _anchors.Clear();
-            else _anchors = new Dictionary<ContentControl, Line>();
-
-            //TODO
             var itemSource = ItemsSource as IEnumerable<SpaceViewItem>;
 
             if (ItemsSource != null && itemSource.Count() > 0)
@@ -303,9 +298,8 @@ namespace SpaceViewTest
                 foreach (var item in itemSource)
                 {
                     var control = CreateItem(item);
-                    ApplyImplicitOffsetAnimation(control, _itemDelayCount++ * _itemAnimationDelay);
-                    _canvas.Children.Add(control);
-                    _elements.Add(control);
+                    ApplyImplicitOffsetAnimation(control);
+                    _itemCanvas.Children.Add(control);
                 }
             }
             
@@ -314,11 +308,11 @@ namespace SpaceViewTest
 
         private void PositionItems()
         {
-            if (_canvas == null) return;
-            _canvas.InvalidateMeasure();
+            if (_itemCanvas == null) return;
+            _itemCanvas.InvalidateMeasure();
 
-            var controlWidth = _canvas.ActualWidth;
-            var controlHeight = _canvas.ActualHeight;
+            var controlWidth = _itemCanvas.ActualWidth;
+            var controlHeight = _itemCanvas.ActualHeight;
 
             double centerLeft(FrameworkElement element, double x) => (controlWidth / 2) + x - element.ActualHeight / 2;
             double centerTop(FrameworkElement element, double y) => (controlHeight / 2) - y - element.ActualWidth / 2;
@@ -357,7 +351,7 @@ namespace SpaceViewTest
                     {
                         orbit = CreateOrbit();
                         _orbits.Add(control, orbit);
-                        _canvas.Children.Add(orbit);
+                        _itemCanvas.Children.Add(orbit);
                     }
 
                     orbit.Height = orbit.Width = 2 * distance;
@@ -370,7 +364,7 @@ namespace SpaceViewTest
                 {
                     var anchor = CreateAnchor(control, x, y);
                     _anchors.Add(control, anchor);
-                    _canvas.Children.Add(anchor);
+                    _itemCanvas.Children.Add(anchor);
                 }
             }
         }
@@ -501,11 +495,11 @@ namespace SpaceViewTest
 
         private void ClearOrbits()
         {
-            if (_canvas == null || _orbits == null) return;
+            if (_itemCanvas == null || _orbits == null) return;
 
             foreach(var orbit in _orbits)
             {
-                _canvas.Children.Remove(orbit.Value);
+                _itemCanvas.Children.Remove(orbit.Value);
             }
 
             _orbits.Clear();
@@ -570,11 +564,11 @@ namespace SpaceViewTest
 
         private void ClearAnchors()
         {
-            if (_canvas == null || _anchors == null) return;
+            if (_itemCanvas == null || _anchors == null) return;
 
             foreach (var anchor in _anchors)
             {
-                _canvas.Children.Remove(anchor.Value);
+                _itemCanvas.Children.Remove(anchor.Value);
             }
 
             _anchors.Clear();
