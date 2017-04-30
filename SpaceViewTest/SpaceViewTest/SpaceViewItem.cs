@@ -48,7 +48,5 @@ namespace SpaceViewTest
         // Using a DependencyProperty as the backing store for Image.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty ImageProperty =
             DependencyProperty.Register("Image", typeof(string), typeof(SpaceViewItem), new PropertyMetadata(null));
-
-
     }
 }

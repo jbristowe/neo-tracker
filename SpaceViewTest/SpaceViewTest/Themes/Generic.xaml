@@ -4,16 +4,20 @@
     xmlns:local="using:SpaceViewTest">
 
     <Style TargetType="local:SpaceView" >
-        <Setter Property="IsFocusEngagementEnabled" Value="True"></Setter>
+        <!--<Setter Property="IsFocusEngagementEnabled" Value="True"></Setter>-->
         <Setter Property="UseSystemFocusVisuals" Value="True"></Setter>
-
+        <Setter Property="AnchorColor" Value="Black"></Setter>
+        <!--<Setter Property="AnchorThickness" Value="4"></Setter>-->
+        <Setter Property="OrbitColor" Value="Black"></Setter>
+        <!--<Setter Property="OrbitThickness" Value="4"></Setter>-->
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="local:SpaceView">
                     <Grid Background="{TemplateBinding Background}">
-                        <Canvas x:Name="OrbitsCanvas"></Canvas>
-                        <Canvas x:Name="Canvas"></Canvas>
-                        <ContentPresenter VerticalAlignment="Center" HorizontalAlignment="Center" Content="{TemplateBinding Content}"></ContentPresenter>
+                        <Canvas x:Name="OrbitCanvas" x:DeferLoadStrategy="Lazy"></Canvas>
+                        <Canvas x:Name="AnchorCanvas" x:DeferLoadStrategy="Lazy"></Canvas>
+                        <Canvas x:Name="ItemCanvas"></Canvas>
+                        <ContentPresenter x:Name="CenterContent" VerticalAlignment="Center" HorizontalAlignment="Center" Content="{TemplateBinding Content}"></ContentPresenter>
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>

@@ -45,6 +45,9 @@ namespace SpaceViewTest
 
         private Canvas _itemCanvas;
         private Canvas _orbitsCanvas;
+        private Canvas _anchorCanvas;
+        private ContentPresenter _centerContent;
+
         private Compositor _compositor;
         private const double _animationDuration = 200;
 
@@ -85,8 +88,14 @@ namespace SpaceViewTest
                 _itemCanvas.SizeChanged -= _canvas_SizeChanged;
             }
 
-            _itemCanvas = (Canvas)GetTemplateChild("Canvas");
+            _itemCanvas = (Canvas)GetTemplateChild("ItemCanvas");
             if (_itemCanvas == null)
+            {
+                return;
+            }
+
+            _centerContent = (ContentPresenter)GetTemplateChild("CenterContent");
+            if (_centerContent == null)
             {
                 return;
             }
@@ -95,7 +104,7 @@ namespace SpaceViewTest
 
             CreateItems();
             _itemCanvas.SizeChanged += _canvas_SizeChanged;
-
+            
             base.OnApplyTemplate();
         }
 
@@ -125,15 +134,15 @@ namespace SpaceViewTest
             DependencyProperty.Register("ItemTemplate", typeof(DataTemplate), typeof(SpaceView), new PropertyMetadata(null));
         
 
-        public bool AreOrbitsEnabled
+        public bool OrbitsEnabled
         {
-            get { return (bool)GetValue(AreOrbitsEnabledProperty); }
-            set { SetValue(AreOrbitsEnabledProperty, value); }
+            get { return (bool)GetValue(OrbitsEnabledProperty); }
+            set { SetValue(OrbitsEnabledProperty, value); }
         }
 
-        // Using a DependencyProperty as the backing store for AreOrbitsEnabled.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty AreOrbitsEnabledProperty =
-            DependencyProperty.Register("AreOrbitsEnabled", typeof(bool), typeof(SpaceView), new PropertyMetadata(false, OnOrbitsEnabledChanged));
+        // Using a DependencyProperty as the backing store for OrbitsEnabled.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty OrbitsEnabledProperty =
+            DependencyProperty.Register("OrbitsEnabled", typeof(bool), typeof(SpaceView), new PropertyMetadata(false, OnOrbitsEnabledChanged));
 
 
 
@@ -147,15 +156,101 @@ namespace SpaceViewTest
         public static readonly DependencyProperty IsItemClickEnabledProperty =
             DependencyProperty.Register("IsItemClickEnabled", typeof(bool), typeof(SpaceView), new PropertyMetadata(false, OnItemClickEnabledChanged));
 
-        public bool AreAnchorsEnabled
+        public bool AnchorsEnabled
         {
-            get { return (bool)GetValue(AreAnchorsEnabledProperty); }
-            set { SetValue(AreAnchorsEnabledProperty, value); }
+            get { return (bool)GetValue(AnchorsEnabledProperty); }
+            set { SetValue(AnchorsEnabledProperty, value); }
         }
 
-        // Using a DependencyProperty as the backing store for AreAnchorsEnabled.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty AreAnchorsEnabledProperty =
-            DependencyProperty.Register("AreAnchorsEnabled", typeof(bool), typeof(SpaceView), new PropertyMetadata(false, OnAchorsEnabledChanged));
+        // Using a DependencyProperty as the backing store for AnchorsEnabled.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty AnchorsEnabledProperty =
+            DependencyProperty.Register("AnchorsEnabled", typeof(bool), typeof(SpaceView), new PropertyMetadata(false, OnAchorsEnabledChanged));
+
+
+
+        public double MinItemSize
+        {
+            get { return (double)GetValue(MinItemSizeProperty); }
+            set { SetValue(MinItemSizeProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for MinItemSize.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty MinItemSizeProperty =
+            DependencyProperty.Register("MinItemSize", typeof(double), typeof(SpaceView), new PropertyMetadata(20d));
+
+
+
+        public double MaxItemSize
+        {
+            get { return (double)GetValue(MaxItemSizeProperty); }
+            set { SetValue(MaxItemSizeProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for MaxItemSize.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty MaxItemSizeProperty =
+            DependencyProperty.Register("MaxItemSize", typeof(double), typeof(SpaceView), new PropertyMetadata(50d));
+
+
+
+        public Brush AnchorColor
+        {
+            get { return (Brush)GetValue(AnchorColorProperty); }
+            set { SetValue(AnchorColorProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for AnchorColor.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty AnchorColorProperty =
+            DependencyProperty.Register("AnchorColor", typeof(Brush), typeof(SpaceView), new PropertyMetadata(new SolidColorBrush(Colors.Black)));
+
+
+
+        public Brush OrbitColor
+        {
+            get { return (Brush)GetValue(OrbitColorProperty); }
+            set { SetValue(OrbitColorProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for OrbitColor.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty OrbitColorProperty =
+            DependencyProperty.Register("OrbitColor", typeof(Brush), typeof(SpaceView), new PropertyMetadata(new SolidColorBrush(Colors.Black)));
+
+
+
+
+        public DoubleCollection OrbitDashArray
+        {
+            get { return (DoubleCollection)GetValue(OrbitDashArrayProperty); }
+            set { SetValue(OrbitDashArrayProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for OrbitDashArray.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty OrbitDashArrayProperty =
+            DependencyProperty.Register("OrbitDashArray", typeof(DoubleCollection), typeof(SpaceView), new PropertyMetadata(null));
+
+
+        public double AnchorThickness
+        {
+            get { return (double)GetValue(AnchorThicknessProperty); }
+            set { SetValue(AnchorThicknessProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for AnchorThickness.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty AnchorThicknessProperty =
+            DependencyProperty.Register("AnchorThickness", typeof(double), typeof(double), new PropertyMetadata(2d));
+
+
+        public double OrbitThickness
+        {
+            get { return (double)GetValue(OrbitThicknessProperty); }
+            set { SetValue(OrbitThicknessProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for OrbitThickness.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty OrbitThicknessProperty =
+            DependencyProperty.Register("OrbitThickness", typeof(double), typeof(SpaceView), new PropertyMetadata(2d));
+
+
+
 
         private static void OnAchorsEnabledChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
@@ -184,6 +279,10 @@ namespace SpaceViewTest
             { 
                 sv.ClearOrbits();
             }
+            else
+            {
+                sv.CreateOrbits();
+            }
 
             sv.PositionItems();
         }
@@ -210,14 +309,11 @@ namespace SpaceViewTest
         private static void OnItemsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             if (e.NewValue == null) return;
-            if (e.NewValue == e.OldValue) return;
 
             var control = d as SpaceView;
             if (control == null) return;
 
-            //TODO - make more generic
-            var newValue = e.NewValue as IEnumerable<SpaceViewItem>;
-            if (newValue == null) return;
+            if (e.NewValue == null) return;
 
             control.HandleNewItemsSource(e.OldValue, e.NewValue);
         }
@@ -276,22 +372,7 @@ namespace SpaceViewTest
             if (_itemCanvas == null) return;
             _itemCanvas.Children.Clear();
 
-            if (Content == null)
-            {
-                Content = new Ellipse()
-                {
-                    Height = 100,
-                    Width = 100,
-                    Fill = new SolidColorBrush(Colors.LightBlue)
-                };
-            }
-
-            var batch = _compositor.CreateScopedBatch(CompositionBatchTypes.Animation);
-
-            ApplyImplicitOffsetAnimation(Content as FrameworkElement);
-            _itemCanvas.Children.Add(Content as FrameworkElement);
-
-            var itemSource = ItemsSource as IEnumerable<SpaceViewItem>;
+            var itemSource = ItemsSource as IEnumerable<object>;
 
             if (ItemsSource != null && itemSource.Count() > 0)
             {
@@ -302,7 +383,9 @@ namespace SpaceViewTest
                     _itemCanvas.Children.Add(control);
                 }
             }
-            
+
+            if (OrbitsEnabled) CreateOrbits();
+
             PositionItems();
         }
 
@@ -317,23 +400,19 @@ namespace SpaceViewTest
             double centerLeft(FrameworkElement element, double x) => (controlWidth / 2) + x - element.ActualHeight / 2;
             double centerTop(FrameworkElement element, double y) => (controlHeight / 2) - y - element.ActualWidth / 2;
 
-            Canvas.SetTop(Content as FrameworkElement, centerTop(Content as FrameworkElement, 0));
-            Canvas.SetLeft(Content as FrameworkElement, centerLeft(Content as FrameworkElement, 0));
-
-            var count = _elements.Count();
-            var angle = 2 * Math.PI / count;
-
-            var minDiameter = 10;
-            var maxDiameter = 40;
+            var angle = 2 * Math.PI / _itemCanvas.Children.Count;
 
             var minDistance = 100;
-            var maxDistance = (Math.Min(controlWidth, controlHeight) - maxDiameter) / 2;
+            var maxDistance = Math.Max(minDistance, (Math.Min(controlWidth, controlHeight) - MaxItemSize) / 2);
 
             var random = new Random();
+
+            var positionOrbits = OrbitsEnabled && _orbitsCanvas != null && _orbitsCanvas.Children.Count == _itemCanvas.Children.Count;
+            var createAnchors = ShouldAnchorsBeCreated();
             
-            for (var i = 0; i < count; i++)
+            for (var i = 0; i < _itemCanvas.Children.Count; i++)
             {
-                var control = _elements.ElementAt(i);
+                var control = _itemCanvas.Children.ElementAt(i) as ContentControl;
 
                 var item = control.DataContext as SpaceViewItem;
 
@@ -345,63 +424,61 @@ namespace SpaceViewTest
                 Canvas.SetTop(control, centerTop(control, y));
                 Canvas.SetLeft(control, centerLeft(control, x));
 
-                if (AreOrbitsEnabled)
+                if (positionOrbits)
                 {
-                    if (!_orbits.TryGetValue(control, out var orbit))
-                    {
-                        orbit = CreateOrbit();
-                        _orbits.Add(control, orbit);
-                        _itemCanvas.Children.Add(orbit);
-                    }
-
+                    var orbit = _orbitsCanvas.Children.ElementAt(i) as FrameworkElement;
                     orbit.Height = orbit.Width = 2 * distance;
                     Canvas.SetTop(orbit, centerTop(orbit, 0));
                     Canvas.SetLeft(orbit, centerLeft(orbit, 0));
-
                 }
 
-                if (AreAnchorsEnabled && !_anchors.ContainsKey(control))
+                // must be created in layout stage due to expression animations need to know x and y
+                if (createAnchors)
                 {
                     var anchor = CreateAnchor(control, x, y);
-                    _anchors.Add(control, anchor);
-                    _itemCanvas.Children.Add(anchor);
+                    _anchorCanvas.Children.Add(anchor);
                 }
             }
         }
 
-        private ContentControl CreateItem(SpaceViewItem item)
+        private ContentControl CreateItem(object item)
         {
             var control = new ContentControl();
             control.DataContext = item;
-            control.SetValue(AutomationProperties.NameProperty, item.Label);
+
+            var spaceViewItem = item as SpaceViewItem;
+            
 
             FrameworkElement element = ItemTemplate?.LoadContent() as FrameworkElement;
             if (element == null)
             {
-                var minDiameter = 5;
-                var maxDiameter = 40;
-
                 var itemEllipse = new Ellipse()
                 {
-                    Width = (item.Diameter) * (maxDiameter - minDiameter) + minDiameter,
-                    Height = (item.Diameter) * (maxDiameter - minDiameter) + minDiameter,
-                    Fill = new SolidColorBrush(Colors.LightGray),
+                    Fill = Foreground,
                 };
 
-                if (item.Image != null)
+                if (spaceViewItem != null && spaceViewItem.Image != null)
                 {
-                    itemEllipse.Fill = new ImageBrush() { ImageSource = new BitmapImage(new Uri(item.Image)) };
+                    itemEllipse.Fill = new ImageBrush() { ImageSource = new BitmapImage(new Uri(spaceViewItem.Image)) };
                 }
 
-                control.Height = control.Width = itemEllipse.Height;
-                control.Content = itemEllipse;
+                element = itemEllipse;
+            }
+
+            if (spaceViewItem != null)
+            {
+                control.SetValue(AutomationProperties.NameProperty, spaceViewItem.Label);
+                element.Width = element.Height = (spaceViewItem.Diameter) * (MaxItemSize - MinItemSize) + MinItemSize;
             }
             else
             {
-                control.Content = element;
+                control.SetValue(AutomationProperties.NameProperty, item.ToString());
             }
 
-            if(IsItemClickEnabled)
+            control.Content = element;
+
+
+            if (IsItemClickEnabled)
             {
                 EnableItemInteraction(control);
             }
@@ -479,50 +556,75 @@ namespace SpaceViewTest
             item.Scale(1.1f, 1.1f, (float)item.ActualWidth / 2, (float)item.ActualHeight / 2, _animationDuration).Start();
         }
 
-        private Ellipse CreateOrbit()
-        {
-            var ellipse = new Ellipse()
-            {
-                StrokeDashArray = { 5, 5 },
-                Stroke = new SolidColorBrush(Colors.LightGray),
-                StrokeThickness = 2
-            };
-
-            Canvas.SetZIndex(ellipse, -1);
-
-            return ellipse;
-        }
-
         private void ClearOrbits()
         {
-            if (_itemCanvas == null || _orbits == null) return;
-
-            foreach(var orbit in _orbits)
+            if (_orbitsCanvas == null)
             {
-                _itemCanvas.Children.Remove(orbit.Value);
+                return;
             }
 
-            _orbits.Clear();
+            _orbitsCanvas.Children.Clear();
+        }
+
+        private void CreateOrbits()
+        {
+            if (_orbitsCanvas == null)
+            {
+                _orbitsCanvas = (Canvas)GetTemplateChild("OrbitCanvas");
+                if (_orbitsCanvas == null)
+                {
+                    return;
+                }
+            }
+
+            _orbitsCanvas.Children.Clear();
+
+            foreach (var item in _itemCanvas.Children)
+            {
+                var ellipse = new Ellipse()
+                {
+                    StrokeDashArray = OrbitDashArray,
+                    Stroke = OrbitColor,
+                    StrokeThickness = OrbitThickness
+                };
+                _orbitsCanvas.Children.Add(ellipse);
+            }
+        }
+
+        private bool ShouldAnchorsBeCreated()
+        {
+            if (!AnchorsEnabled)
+            {
+                return false;
+            }
+
+            if (_anchorCanvas == null)
+            {
+                _anchorCanvas = (Canvas)GetTemplateChild("AnchorCanvas");
+                if (_anchorCanvas == null)
+                {
+                    return false;
+                }
+            }
+
+            return _anchorCanvas.Children.Count != _itemCanvas.Children.Count;
         }
 
         private Line CreateAnchor(UIElement element, double x, double y)
         {
             var anchor = new Line()
             {
-                Stroke = new SolidColorBrush(Colors.LightGray),
+                Stroke = AnchorColor,
+                StrokeThickness = AnchorThickness,
                 X1 = 0,
                 Y1 = 0,
                 X2 = 100,
                 Y2 = 0
             };
 
-            Canvas.SetZIndex(anchor, -1);
-
             var anchorVisual = ElementCompositionPreview.GetElementVisual(anchor);
             var elementVisual = ElementCompositionPreview.GetElementVisual(element);
-            var centerVisual = ElementCompositionPreview.GetElementVisual(Content as UIElement);
-
-            
+            var centerVisual = ElementCompositionPreview.GetElementVisual(_centerContent);
 
             string expression = "";
             var elementY = "(elementVisual.Offset.Y + elementVisual.Size.Y / 2)";
@@ -564,14 +666,12 @@ namespace SpaceViewTest
 
         private void ClearAnchors()
         {
-            if (_itemCanvas == null || _anchors == null) return;
-
-            foreach (var anchor in _anchors)
+            if (_anchorCanvas == null)
             {
-                _itemCanvas.Children.Remove(anchor.Value);
+                return;
             }
 
-            _anchors.Clear();
+            _anchorCanvas.Children.Clear();
         }
 
         private void ApplyImplicitOffsetAnimation(UIElement element, double delay = 0)

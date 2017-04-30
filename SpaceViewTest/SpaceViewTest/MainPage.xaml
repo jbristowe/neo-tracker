@@ -11,7 +11,7 @@
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Pivot>
             <PivotItem Header="Solar">
-                <local:SpaceView Background="Black" x:Name="solar">
+                <local:SpaceView Background="Black" x:Name="solar" Foreground="LightGray">
                     <local:SpaceView.ItemsSource>
                         <local:SpaceViewItemCollection>
                             <local:SpaceViewItem  Distance="0" Diameter="0.024619077" Label="Mercury"></local:SpaceViewItem>
@@ -33,7 +33,7 @@
                 </local:SpaceView>
             </PivotItem>
             <PivotItem Header="People">
-                <local:SpaceView x:Name="people" AreOrbitsEnabled="True" IsItemClickEnabled="True" ItemClicked="people_ItemClicked">
+                <local:SpaceView x:Name="people" OrbitsEnabled="True" IsItemClickEnabled="True" ItemClicked="people_ItemClicked" MinItemSize="10" MaxItemSize="100">
                     <local:SpaceView.ItemTemplate>
                         <DataTemplate x:DataType="local:SpaceViewItem">
                             <Grid Height="60" Width="60">
@@ -69,7 +69,7 @@
             </PivotItem>
             <PivotItem Header="Network">
                 <Grid>
-                    <local:SpaceView x:Name="devices" AreAnchorsEnabled="True" IsItemClickEnabled="True" ItemClicked="people_ItemClicked" ItemsSource="{x:Bind Devices}">
+                    <local:SpaceView x:Name="devices" AnchorsEnabled="True" IsItemClickEnabled="True" ItemClicked="people_ItemClicked" ItemsSource="{x:Bind Devices}" MinItemSize="10" MaxItemSize="100">
                         <local:SpaceView.ItemTemplate>
                             <DataTemplate x:DataType="local:DeviceItem">
                                 <Grid Height="60" Width="60" Background="White">
