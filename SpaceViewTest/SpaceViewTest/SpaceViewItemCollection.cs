@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SpaceViewTest
 {
-    public class SpaceViewItemCollection : List<SpaceViewItem>
-    {
-    }
+        public class SpaceViewItemCollection : List<SpaceViewItem>
+        {
+        }
 }

@@ -5,11 +5,9 @@
     xmlns:local="using:NEOTracker.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:neotracker="using:NEOTracker"
+    xmlns:neoControls="using:NEOTracker.Controls"
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:wrapPanel="using:Microsoft.Toolkit.Uwp.UI.Controls.WrapPanel"
-    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
-    xmlns:behaviors="using:Microsoft.Toolkit.Uwp.UI.Animations.Behaviors"
     mc:Ignorable="d">
 
     <Grid>
@@ -17,14 +15,15 @@
             <ColumnDefinition Width="*"></ColumnDefinition>
             <ColumnDefinition Width="300"></ColumnDefinition>
         </Grid.ColumnDefinitions>
-        <neotracker:NEOVisualizer x:Name="Visualizer" Margin="20" MaxItemSize="30" MinItemSize="10">
-            <Image Source="ms-appx:///Assets/icons/18238_white.png" Height="100" Width="100"></Image>
-            <neotracker:NEOVisualizer.ItemTemplate>
-                <DataTemplate x:DataType="neotracker:NEO">
-                    <Ellipse Fill="{x:Bind local:SpaceViewPage.DangerZoneColor(Item)}"></Ellipse>
+                
+        <ListView x:Name="Visualizer">
+            <ListView.ItemTemplate>
+                <DataTemplate x:DataType="neoControls:NEO">
+                    <TextBlock Text="{x:Bind Label}" Foreground="{x:Bind local:SpaceViewPage.DangerZoneColor(Item)}"></TextBlock>
                 </DataTemplate>
-            </neotracker:NEOVisualizer.ItemTemplate>
-        </neotracker:NEOVisualizer>
+            </ListView.ItemTemplate>
+        </ListView>
+        
         <Grid Grid.Column="1" Margin="0,40,40,40" VerticalAlignment="Top" >
             <Border Background="#4C4B4B4B" CornerRadius="10"></Border>
             <ItemsControl Margin="15">
@@ -33,9 +32,9 @@
                         <wrapPanel:WrapPanel />
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
-                <controls:HeaderedTextBlock Header="Name" Text="{x:Bind Visualizer.SelectedItem.Item.Name, Mode=OneWay}" Margin="0,0,20,20"/>
-                <controls:HeaderedTextBlock Header="DangerZone" Text="{x:Bind Visualizer.SelectedItem.Item.IsPotentiallyHazardousAsteroid, Mode=OneWay}" Margin="0,0,20,20"/>
-                <controls:HeaderedTextBlock Header="Diameter (km)" Text="{x:Bind Visualizer.SelectedItem.Item.EstimatedDiameter.Kilometers.EstimatedDiameterMax, Mode=OneWay}" Margin="0,0,20,20"/>
+                <controls:HeaderedTextBlock Header="Name" Text="{Binding SelectedItem.Item.Name, ElementName=Visualizer, Mode=OneWay}" Margin="0,0,20,20"/>
+                <controls:HeaderedTextBlock Header="DangerZone" Text="{Binding SelectedItem.Item.IsPotentiallyHazardousAsteroid, ElementName=Visualizer, Mode=OneWay}" Margin="0,0,20,20"/>
+                <controls:HeaderedTextBlock Header="Diameter (km)" Text="{Binding SelectedItem.Item.EstimatedDiameter.Kilometers.EstimatedDiameterMax, ElementName=Visualizer, Mode=OneWay}" Margin="0,0,20,20"/>
             </ItemsControl>
         </Grid>
     </Grid>

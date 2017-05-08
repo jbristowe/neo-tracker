@@ -97,7 +97,6 @@
     </Compile>
     <Compile Include="Controls\DeviationStyleSelector.cs" />
     <Compile Include="Controls\NEO.cs" />
-    <Compile Include="Controls\NEOVisualizer.cs" />
     <Compile Include="Data\CneosData.cs" />
     <Compile Include="Data\Data.cs" />
     <Compile Include="Data\EsaData.cs" />
@@ -201,10 +200,6 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Page Include="MainPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Themes\Generic.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

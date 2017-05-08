@@ -1,6 +1,6 @@
 ﻿using WebRocks.Data;
 
-namespace NEOTracker
+namespace NEOTracker.Controls
 {
     public class NEO
     {
