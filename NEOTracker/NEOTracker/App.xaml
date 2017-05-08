@@ -2,8 +2,7 @@
     x:Class="NEOTracker.App"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
-    RequestedTheme="Dark">
+    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls">
     <Application.Resources>
         <Style TargetType="controls:MasterDetailsView">
             <Setter Property="Background" Value="{ThemeResource ApplicationPageBackgroundThemeBrush}" />
