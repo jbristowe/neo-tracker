@@ -5,29 +5,41 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:telerik="using:Telerik.UI.Xaml.Controls.Chart"
+    xmlns:converters="using:NEOTracker.Converters"
     mc:Ignorable="d">
+    <Page.Resources>
+        <converters:DataToPointConverter x:Key="DataToPointConverter" />
+    </Page.Resources>
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <telerik:RadCartesianChart>
+        <telerik:RadCartesianChart x:Name="chart">
             <telerik:RadCartesianChart.Behaviors>
-                <telerik:ChartTooltipBehavior />
+                <telerik:ChartTooltipBehavior>
+                    <telerik:ChartTooltipBehavior.ContentTemplate>
+                        <DataTemplate>
+                            <StackPanel Background="White" Margin="5">
+                                <TextBlock Text="{Binding DataPoint.DataItem.Name}" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </telerik:ChartTooltipBehavior.ContentTemplate>
+                </telerik:ChartTooltipBehavior>
             </telerik:RadCartesianChart.Behaviors>
             <telerik:RadCartesianChart.VerticalAxis>
-                <telerik:LinearAxis Title="Size" />
+                <telerik:LogarithmicAxis Title="Size" />
             </telerik:RadCartesianChart.VerticalAxis>
             <telerik:RadCartesianChart.HorizontalAxis>
-                <telerik:LinearAxis Title="IP" />
+                <telerik:LogarithmicAxis Title="Impact Probability" Maximum="100" />
             </telerik:RadCartesianChart.HorizontalAxis>
             <telerik:RadCartesianChart.Grid>
                 <telerik:CartesianChartGrid MajorLinesVisibility="XY" />
             </telerik:RadCartesianChart.Grid>
-            <telerik:PointSeries ItemsSource="{Binding}">
-                <telerik:PointSeries.CategoryBinding>
-                    <telerik:PropertyNameDataPointBinding PropertyName="IP"/>
-                </telerik:PointSeries.CategoryBinding>
-                <telerik:PointSeries.ValueBinding>
-                    <telerik:PropertyNameDataPointBinding PropertyName="Size"/>
-                </telerik:PointSeries.ValueBinding>
-            </telerik:PointSeries>
+            <telerik:ScatterPointSeries ItemsSource="{Binding}">
+                <telerik:ScatterPointSeries.XValueBinding>
+                    <telerik:PropertyNameDataPointBinding PropertyName="IP" />
+                </telerik:ScatterPointSeries.XValueBinding>
+                <telerik:ScatterPointSeries.YValueBinding>
+                    <telerik:PropertyNameDataPointBinding PropertyName="Size" />
+                </telerik:ScatterPointSeries.YValueBinding>
+            </telerik:ScatterPointSeries>
         </telerik:RadCartesianChart>
     </Grid>
 </Page>
