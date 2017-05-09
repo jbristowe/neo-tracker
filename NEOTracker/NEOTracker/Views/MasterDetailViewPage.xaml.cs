@@ -26,7 +26,6 @@ namespace NEOTracker.Views
         protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-
             cvs.Source = await Data.Data.GetGroupedNEOs();
         }
 
@@ -47,7 +46,7 @@ namespace NEOTracker.Views
 
             TwitterService.Instance.Initialize(Keys.TwitterConsumerKey, Keys.TwitterSecretKey, Keys.TwitterCallbackUri);
             if (!await TwitterService.Instance.LoginAsync()) { return; }
-            await TwitterService.Instance.TweetStatusAsync($"Check out this Near Earth Object #dontpanic #TheWorldIsAboutToEnd {item.NasaJPLUrl}");
+            await TwitterService.Instance.TweetStatusAsync($"Check out {item.Name} #dontpanic #TheWorldIsAboutToEnd {item.NasaJPLUrl}");
         }
 
         private async void FacebookClicked(object sender, RoutedEventArgs e)
@@ -56,7 +55,7 @@ namespace NEOTracker.Views
 
             FacebookService.Instance.Initialize(Keys.FBAppId);
             if (!await FacebookService.Instance.LoginAsync()) { return; }
-            await FacebookService.Instance.PostToFeedWithDialogAsync(item.Name, "Shared with NEO Tracker for UWP", item.NasaJPLUrl);
+            await FacebookService.Instance.PostToFeedWithDialogAsync(item.Name, $"Check out {item.Name} #dontpanic #TheWorldIsAboutToEnd", item.NasaJPLUrl);
 
         }
 
