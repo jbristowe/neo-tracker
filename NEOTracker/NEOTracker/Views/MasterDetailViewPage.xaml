@@ -48,30 +48,31 @@
         </DataTemplate>
     </Page.Resources>
     <Grid>
-        <controls:MasterDetailsView x:Name="MasterDetails"
+        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="8"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+
+        <Rectangle x:Name="Danger" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"></Rectangle>
+
+        <controls:MasterDetailsView x:Name="MasterDetails" Grid.Row="1"
                                     ItemsSource="{Binding Source={StaticResource cvs}}"
                                     NoSelectionContent="Select an item to view"
-                                    Background="Transparent">
+                                    Background="Transparent"
+                                    SelectionChanged="MasterDetails_SelectionChanged">
             <controls:MasterDetailsView.ItemTemplate>
                 <DataTemplate x:DataType="rocks:NearEarthObject">
-                    <controls:SlidableListItem LeftBackground="Blue"
-                                               RightBackground="Red"
-                                               LeftIcon="ReShare"
-                                               RightIcon="Delete"
-                                               MouseSlidingEnabled="True"
-                                               IsPointerReleasedOnSwipingHandled="True">
                         <StackPanel Margin="0,8">
                             <TextBlock Text="{x:Bind Name}" Style="{ThemeResource SubtitleTextBlockStyle}"/>
-                            <TextBlock Text="{x:Bind IsPotentiallyHazardousAsteroid}" Style="{ThemeResource BodyTextBlockStyle}" MaxLines="1"/>
                         </StackPanel>
-                    </controls:SlidableListItem>
                 </DataTemplate>
             </controls:MasterDetailsView.ItemTemplate>
             <controls:MasterDetailsView.DetailsTemplate>
                 <DataTemplate x:DataType="rocks:NearEarthObject">
-                    <ScrollViewer>
+                    <ScrollViewer Background="Black">
                         <StackPanel>
-                            <controls:Expander IsExpanded="True" Header="Details" HorizontalContentAlignment="Stretch">
+                            <controls:Expander IsExpanded="True" Header="Details">
                                 <ItemsControl Margin="8">
                                     <ItemsControl.ItemsPanel>
                                         <ItemsPanelTemplate>
@@ -79,11 +80,12 @@
                                         </ItemsPanelTemplate>
                                     </ItemsControl.ItemsPanel>
                                     <controls:HeaderedTextBlock Header="Name" Text="{x:Bind Name}" Margin="0,0,20,20"/>
-                                    <controls:HeaderedTextBlock Header="DangerZone" Text="{x:Bind IsPotentiallyHazardousAsteroid}" Margin="0,0,20,20"/>
+                                    <controls:HeaderedTextBlock Header="Potentially Hazardous" Text="{x:Bind IsPotentiallyHazardousAsteroid}" Margin="0,0,20,20"/>
                                     <controls:HeaderedTextBlock Header="Diameter (km)" Text="{x:Bind EstimatedDiameter.Kilometers.EstimatedDiameterMax}" Margin="0,0,20,20"/>
+                                    <controls:HeaderedTextBlock Header="AbsoluteMagnitudeH" Text="{x:Bind AbsoluteMagnitudeH}" Margin="0,0,20,20"/>
                                 </ItemsControl>
                             </controls:Expander>
-                            <controls:Expander Header="Close Approaches" Visibility="{x:Bind local:MasterDetailViewPage.CloseApproachesToVisibility(CloseApproaches)}">
+                            <controls:Expander Header="Close Approaches">
                                 <telerikGrid:RadDataGrid AutoGenerateColumns="False" UserGroupMode="Disabled" UserColumnReorderMode="None" x:Name="telerikGrid" ItemsSource="{x:Bind CloseApproaches}">
                                     <telerikGrid:RadDataGrid.Columns>
                                         <telerikGrid:DataGridTemplateColumn Header="DATE">
@@ -116,14 +118,13 @@
                                     </telerikGrid:RadDataGrid.Columns>
                                 </telerikGrid:RadDataGrid>
                             </controls:Expander>
-                            <controls:Expander IsExpanded="False" Header="Share" HorizontalContentAlignment="Stretch">
+                            <controls:Expander IsExpanded="False" Header="Share">
                                 <StackPanel Orientation="Horizontal" Margin="8">
                                     <Button Content="Facebook" Click="FacebookClicked"></Button>
                                     <Button Content="Twitter" Click="TwitterClicked"></Button>
-                                    <Button Content="..." Click="ShareClicked"></Button>
                                 </StackPanel>
                             </controls:Expander>
-                            <controls:Expander IsExpanded="False" Header="In the News" HorizontalContentAlignment="Stretch">
+                            <controls:Expander IsExpanded="False" Header="In the News">
                                 <ListView ItemsSource="{x:Bind local:MasterDetailViewPage.GetNewsItems(Name)}" ItemTemplate="{StaticResource BingSchemaTemplate}"></ListView>
                             </controls:Expander>
                         </StackPanel>

@@ -1,23 +1,23 @@
 ﻿using Microsoft.Toolkit.Uwp.Services.Bing;
 using Microsoft.Toolkit.Uwp.Services.Facebook;
 using Microsoft.Toolkit.Uwp.Services.Twitter;
+using Microsoft.Toolkit.Uwp.UI.Animations;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
+using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
 namespace NEOTracker.Views
 {
     public sealed partial class MasterDetailViewPage : Page
     {
-        ObservableCollection<WebRocks.Data.NearEarthObject> Items = new ObservableCollection<WebRocks.Data.NearEarthObject>();
-        static Dictionary<string, ObservableCollection<BingResult>> NewsItems = new Dictionary<string, ObservableCollection<BingResult>>();
-
         public MasterDetailViewPage()
         {
             this.InitializeComponent();
@@ -26,23 +26,11 @@ namespace NEOTracker.Views
         protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            DataTransferManager.GetForCurrentView().DataRequested += DataTransferManager_DataRequested;
 
-            var group = await Data.Data.GetGroupedNEOs();
-            cvs.Source = group;
+            cvs.Source = await Data.Data.GetGroupedNEOs();
         }
 
-        private void DataTransferManager_DataRequested(DataTransferManager sender, DataRequestedEventArgs args)
-        {
-            var item = (MasterDetails.SelectedItem as WebRocks.Data.NearEarthObject);
-            args.Request.Data.SetWebLink(new Uri(item.NasaJPLUrl));
-
-            args.Request.Data.Properties.Title = item.Name;
-            args.Request.Data.Properties.Description = $"Share details about {item.Name}";
-
-        }
-
-        private static async Task LoadData(string query, ObservableCollection<BingResult> results)
+        public static IEnumerable<BingResult> GetNewsItems(string query)
         {
             var searchConfig = new BingSearchConfig
             {
@@ -50,33 +38,7 @@ namespace NEOTracker.Views
                 QueryType = BingQueryType.Search
             };
 
-            var newsItems = await BingService.Instance.RequestAsync(searchConfig, 10);
-
-            foreach (var result in newsItems) results.Add(result);
-            NewsItems.Add(query, results);
-        }
-
-        private static Visibility CloseApproachesToVisibility(WebRocks.Data.CloseApproachDate[] data)
-        {
-            return data != null && data.Count() > 0 ? Visibility.Visible : Visibility.Collapsed;
-        }
-
-        public static IEnumerable<BingResult> GetNewsItems(string query)
-        {
-            if (NewsItems.TryGetValue(query, out var results))
-            {
-                return results;
-            }
-
-            results = new ObservableCollection<BingResult>();
-            LoadData(query, results);
-
-            return results;
-        }
-
-        private void ShareClicked(object sender, RoutedEventArgs e)
-        {
-            DataTransferManager.ShowShareUI();
+            return BingService.GetAsIncrementalLoading(searchConfig, 50);
         }
 
         private async void TwitterClicked(object sender, RoutedEventArgs e)
@@ -96,6 +58,30 @@ namespace NEOTracker.Views
             if (!await FacebookService.Instance.LoginAsync()) { return; }
             await FacebookService.Instance.PostToFeedWithDialogAsync(item.Name, "Shared with NEO Tracker for UWP", item.NasaJPLUrl);
 
+        }
+
+        private async void MasterDetails_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (e.AddedItems.Count > 0 && e.AddedItems.First() is WebRocks.Data.NearEarthObject item)
+            {
+                await Danger.Scale(0, 1, duration: 300).StartAsync();
+
+                if (item.IsPotentiallyHazardousAsteroid)
+                {
+                    Danger.Fill = new SolidColorBrush(Colors.Red);
+                    Danger.Fade(1, duration: 200).Scale(1, 1, duration: 200).Then()
+                          .Fade(0, duration: 200).Then()
+                          .Fade(1, duration: 200).Then()
+                          .Fade(0, duration: 200).Then()
+                          .Fade(1, duration: 500)
+                          .Start();
+                }
+                else
+                {
+                    Danger.Fill = new SolidColorBrush(Colors.Green);
+                    Danger.Fade(1, duration: 300).Scale(1, 1, duration: 300).Start();
+                }
+            }
         }
     }
 }

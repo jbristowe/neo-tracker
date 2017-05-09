@@ -1,8 +1,10 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WebRocks.Data;
+using Windows.Storage;
 
 namespace NEOTracker.Data
 {
@@ -14,10 +16,14 @@ namespace NEOTracker.Data
         {
             if (results == null)
             {
-                var config = new WebRocks.WebRocksConfiguration(apiKey: Keys.NASAAPIKEY);
-                var provider = new WebRocks.Requests.HttpClientNeoRequestProvider();
-                var client = new WebRocks.WebRocksClient(config, provider);
-                results = await client.GetFeedPageAsync(DateTime.Now);
+                //var config = new WebRocks.WebRocksConfiguration(apiKey: Keys.NASAAPIKEY);
+                //var provider = new WebRocks.Requests.HttpClientNeoRequestProvider();
+                //var client = new WebRocks.WebRocksClient(config, provider);
+                //results = await client.GetFeedPageAsync(DateTime.Now);
+                //var str = JsonConvert.SerializeObject(results);
+                var file = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///Data/data.json"));
+                var str = await FileIO.ReadTextAsync(file);
+                results = JsonConvert.DeserializeObject<ApiFeedPage>(str);
             }
         }
 

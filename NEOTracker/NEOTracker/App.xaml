@@ -191,6 +191,10 @@
                 </Setter.Value>
             </Setter>
         </Style>
+
+        <Style TargetType="controls:Expander">
+            <Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>
+        </Style>
     </Application.Resources>
 
 </Application>

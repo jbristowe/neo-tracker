@@ -134,6 +134,7 @@
     <Content Include="Data\cneos-data.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Data\data.json" />
     <None Include="NEOTracker_TemporaryKey.pfx" />
     <None Include="thanks.md" />
   </ItemGroup>
