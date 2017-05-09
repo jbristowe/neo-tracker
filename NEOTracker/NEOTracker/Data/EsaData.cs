@@ -25,7 +25,7 @@ namespace NEOTracker.Data
                         var name = csvReader.GetField<string>(0);
                         var size = float.Parse(csvReader.GetField<string>(1).Split('*')[0]);
                         var closeApproachDateTime = csvReader.GetField<DateTime>(2);
-                        var impactProbability = double.Parse(csvReader.GetField<string>(3).Split('/')[0]) / double.Parse(csvReader.GetField<string>(3).Split('/')[1]);
+                        var impactProbability = float.Parse(csvReader.GetField<string>(3).Split('/')[0]) / float.Parse(csvReader.GetField<string>(3).Split('/')[1]);
                         var palermoScale = csvReader.GetField<float>(4);
                         var torinoScale = csvReader.GetField<string>(5) == "n/a" ? null : csvReader.GetField<float?>(5);
                         var velocity = csvReader.GetField<float>(6);
@@ -55,7 +55,7 @@ namespace NEOTracker.Data
         public string Name { get; set; }
         public float Size { get; set; }
         public DateTime CloseApproachDateTime { get; set; }
-        public double IP { get; set; }
+        public float IP { get; set; }
         public float PS { get; set; }
         public float? TS { get; set; }
         public float Velocity { get; set; }
