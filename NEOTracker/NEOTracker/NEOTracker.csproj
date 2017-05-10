@@ -98,6 +98,7 @@
     <Compile Include="Controls\DeviationStyleSelector.cs" />
     <Compile Include="Controls\NEO.cs" />
     <Compile Include="Controls\NEOVisualizer.cs" />
+    <Compile Include="Converters\DataToPointConverter.cs" />
     <Compile Include="Data\CneosData.cs" />
     <Compile Include="Data\Data.cs" />
     <Compile Include="Data\EsaData.cs" />
