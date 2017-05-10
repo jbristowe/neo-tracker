@@ -5,29 +5,29 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:telerik="using:Telerik.UI.Xaml.Controls.Chart"
+    xmlns:local="using:NEOTracker.Views"
     mc:Ignorable="d">
     <Grid Margin="0,5,10,5">
-        <telerik:RadCartesianChart x:Name="chart">
-            <telerik:RadCartesianChart.Behaviors>
-                <telerik:ChartTooltipBehavior />
-            </telerik:RadCartesianChart.Behaviors>
-            <telerik:RadCartesianChart.VerticalAxis>
-                <telerik:LogarithmicAxis Title="Miss Distance (km)" />
-            </telerik:RadCartesianChart.VerticalAxis>
-            <telerik:RadCartesianChart.HorizontalAxis>
-                <telerik:DateTimeContinuousAxis Title="Date" LabelFormat="{}{0,0:yyyy}" />
-            </telerik:RadCartesianChart.HorizontalAxis>
-            <telerik:RadCartesianChart.Grid>
-                <telerik:CartesianChartGrid MajorLinesVisibility="XY" />
-            </telerik:RadCartesianChart.Grid>
-            <telerik:PointSeries ItemsSource="{Binding}">
-                <telerik:PointSeries.CategoryBinding>
-                    <telerik:PropertyNameDataPointBinding PropertyName="CloseApproachDateTime"/>
-                </telerik:PointSeries.CategoryBinding>
-                <telerik:PointSeries.ValueBinding>
-                    <telerik:PropertyNameDataPointBinding PropertyName="MissDistance"/>
-                </telerik:PointSeries.ValueBinding>
-            </telerik:PointSeries>
-        </telerik:RadCartesianChart>
+        <telerik:RadPolarChart x:Name="chart">
+            <telerik:RadPolarChart.Grid>
+                <telerik:PolarChartGrid GridLineVisibility="Radial" />
+            </telerik:RadPolarChart.Grid>
+            <telerik:RadPolarChart.PolarAxis>
+                <telerik:PolarAxis />
+            </telerik:RadPolarChart.PolarAxis>
+            <telerik:RadPolarChart.RadialAxis>
+                <telerik:NumericalRadialAxis />
+            </telerik:RadPolarChart.RadialAxis>
+            <telerik:RadPolarChart.Series>
+                <telerik:PolarPointSeries ItemsSource="{Binding}">
+                    <telerik:PolarPointSeries.ValueBinding>
+                        <telerik:PropertyNameDataPointBinding PropertyName="MissDistance" />
+                    </telerik:PolarPointSeries.ValueBinding>
+                    <telerik:PolarPointSeries.AngleBinding>
+                        <telerik:PropertyNameDataPointBinding PropertyName="Angle" />
+                    </telerik:PolarPointSeries.AngleBinding>
+                </telerik:PolarPointSeries>
+            </telerik:RadPolarChart.Series>
+        </telerik:RadPolarChart>
     </Grid>
 </Page>
