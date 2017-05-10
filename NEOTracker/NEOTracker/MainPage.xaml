@@ -27,6 +27,22 @@
             </Grid>
         </DataTemplate>
 
+        <DataTemplate x:Key="HamburgerMenuOptionItem" x:DataType="toolkit:HamburgerMenuGlyphItem">
+            <Grid Width="240" Height="48">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="48" />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="{Binding Glyph}" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="16" />
+                <TextBlock Grid.Column="1" 
+                           Text="{x:Bind Label}" 
+                           Foreground="White" 
+                           FontSize="16" 
+                           VerticalAlignment="Center" />
+            </Grid>
+        </DataTemplate>
+
+
     </Page.Resources>
     
 
@@ -55,9 +71,17 @@
                                IsPaneOpen="False"
                                Foreground="White"
                                ItemTemplate="{StaticResource HamburgerMenuItem}"
-                               ItemClick="Menu_ItemClick">
+                               OptionsItemTemplate="{StaticResource HamburgerMenuOptionItem}"
+                               ItemClick="Menu_ItemClick"
+                               OptionsItemClick="Menu_OptionsItemClick">
 
                 <Frame x:Name="MainFrame" Grid.Row="1"></Frame>
+
+            <toolkit:HamburgerMenu.OptionsItemsSource>
+                <toolkit:HamburgerMenuItemCollection>
+                    <toolkit:HamburgerMenuGlyphItem Label="About" Glyph="?"/>
+                </toolkit:HamburgerMenuItemCollection>
+            </toolkit:HamburgerMenu.OptionsItemsSource>
 
         </toolkit:HamburgerMenu>
     </Grid>

@@ -37,6 +37,12 @@ namespace NEOTracker
             MainFrame.Navigate(view.PageType);
             MainFrame.BackStack.Clear();
         }
+
+        private void Menu_OptionsItemClick(object sender, ItemClickEventArgs e)
+        {
+            MainFrame.Navigate(typeof(About));
+            MainFrame.BackStack.Clear();
+        }
     }
 
     public class View
