@@ -245,6 +245,9 @@
     <PackageReference Include="Microsoft.Toolkit.Uwp.Services">
       <Version>1.4.1</Version>
     </PackageReference>
+    <PackageReference Include="Microsoft.Toolkit.Uwp.UI">
+      <Version>1.4.1</Version>
+    </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Animations">
       <Version>1.4.1</Version>
     </PackageReference>

@@ -6,7 +6,6 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Markup;
 using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
 
 namespace NEOTracker.Views
 {
@@ -15,18 +14,17 @@ namespace NEOTracker.Views
         public TorinoImpactHazardScaleViewPage()
         {
             InitializeComponent();
-            chart.Loaded += ChartLoaded;
-            chart.SizeChanged += ChartSizeChanged;
-        }
 
-        private void ChartLoaded(object sender, RoutedEventArgs e)
-        {
-            DrawAnnotations();
-        }
+            Loaded += async (s, e) =>
+            {
+                var esaData = await EsaDataManager.GetEsaDataAsync();
+                DataContext = esaData;
+            };
 
-        private void ChartSizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            DrawAnnotations();
+            chart.SizeChanged += (s, e) =>
+            {
+                DrawAnnotations();
+            };
         }
 
         private void DrawAnnotations()
@@ -85,10 +83,12 @@ namespace NEOTracker.Views
                 </DataTemplate>";
             var dataTemplate = XamlReader.Load(xamlString) as DataTemplate;
 
-            var annotation = new CartesianCustomAnnotation();
-            annotation.HorizontalValue = 1E-08;
-            annotation.VerticalValue = 10000;
-            annotation.ContentTemplate = dataTemplate;
+            var annotation = new CartesianCustomAnnotation()
+            {
+                HorizontalValue = 1E-08,
+                VerticalValue = 10000,
+                ContentTemplate = dataTemplate
+            };
             chart.Annotations.Add(annotation);
         }
 
@@ -125,10 +125,12 @@ namespace NEOTracker.Views
                 </DataTemplate>";
             var dataTemplate = XamlReader.Load(xamlString) as DataTemplate;
 
-            var annotation = new CartesianCustomAnnotation();
-            annotation.HorizontalValue = 0.000001;
-            annotation.VerticalValue = 10000;
-            annotation.ContentTemplate = dataTemplate;
+            var annotation = new CartesianCustomAnnotation()
+            {
+                HorizontalValue = 0.000001,
+                VerticalValue = 10000,
+                ContentTemplate = dataTemplate
+            };
             chart.Annotations.Add(annotation);
         }
 
@@ -160,10 +162,12 @@ namespace NEOTracker.Views
                 </DataTemplate>";
             var dataTemplate = XamlReader.Load(xamlString) as DataTemplate;
 
-            var annotation = new CartesianCustomAnnotation();
-            annotation.HorizontalValue = 0.01;
-            annotation.VerticalValue = 1000;
-            annotation.ContentTemplate = dataTemplate;
+            var annotation = new CartesianCustomAnnotation()
+            {
+                HorizontalValue = 0.01,
+                VerticalValue = 1000,
+                ContentTemplate = dataTemplate
+            };
             chart.Annotations.Add(annotation);
         }
 
@@ -195,10 +199,12 @@ namespace NEOTracker.Views
                 </DataTemplate>";
             var dataTemplate = XamlReader.Load(xamlString) as DataTemplate;
 
-            var annotation = new CartesianCustomAnnotation();
-            annotation.HorizontalValue = 0.01;
-            annotation.VerticalValue = 1000;
-            annotation.ContentTemplate = dataTemplate;
+            var annotation = new CartesianCustomAnnotation()
+            {
+                HorizontalValue = 0.01,
+                VerticalValue = 1000,
+                ContentTemplate = dataTemplate
+            };
             chart.Annotations.Add(annotation);
         }
 
@@ -230,18 +236,13 @@ namespace NEOTracker.Views
                 </DataTemplate>";
             var dataTemplate = XamlReader.Load(xamlString) as DataTemplate;
 
-            var annotation = new CartesianCustomAnnotation();
-            annotation.HorizontalValue = 0.0001;
-            annotation.VerticalValue = 10000;
-            annotation.ContentTemplate = dataTemplate;
+            var annotation = new CartesianCustomAnnotation()
+            {
+                HorizontalValue = 0.0001,
+                VerticalValue = 10000,
+                ContentTemplate = dataTemplate
+            };
             chart.Annotations.Add(annotation);
-        }
-
-        protected async override void OnNavigatedTo(NavigationEventArgs e)
-        {
-            base.OnNavigatedTo(e);
-            var esaData = await EsaDataManager.GetEsaDataAsync();
-            DataContext = esaData;
         }
     }
 }
