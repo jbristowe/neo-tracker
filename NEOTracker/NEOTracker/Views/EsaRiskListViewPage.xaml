@@ -4,15 +4,15 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:telerikGrid="using:Telerik.UI.Xaml.Controls.Grid"
     xmlns:telerikChart="using:Telerik.UI.Xaml.Controls.Chart"
+    xmlns:telerikGrid="using:Telerik.UI.Xaml.Controls.Grid"
     mc:Ignorable="d">
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <telerikChart:RadCartesianChart Grid.Row="0">
+        <telerikChart:RadCartesianChart x:Name="chart" Grid.Row="0">
             <telerikChart:RadCartesianChart.Behaviors>
                 <telerikChart:ChartTooltipBehavior />
             </telerikChart:RadCartesianChart.Behaviors>
@@ -26,6 +26,11 @@
                 <telerikChart:CartesianChartGrid MajorLinesVisibility="XY" />
             </telerikChart:RadCartesianChart.Grid>
             <telerikChart:PointSeries ItemsSource="{Binding}">
+                <telerikChart:PointTemplateSeries.PointTemplate>
+                    <DataTemplate>
+                        <Ellipse Height="10" Width="10" Fill="#B21E98E4" />
+                    </DataTemplate>
+                </telerikChart:PointTemplateSeries.PointTemplate>
                 <telerikChart:PointSeries.CategoryBinding>
                     <telerikChart:PropertyNameDataPointBinding PropertyName="CloseApproachDateTime" />
                 </telerikChart:PointSeries.CategoryBinding>
@@ -34,7 +39,7 @@
                 </telerikChart:PointSeries.ValueBinding>
             </telerikChart:PointSeries>
         </telerikChart:RadCartesianChart>
-        <telerikGrid:RadDataGrid SelectionUnit="Row" Grid.Row="1" AutoGenerateColumns="False" UserGroupMode="Disabled" UserColumnReorderMode="None" ItemsSource="{Binding}">
+        <telerikGrid:RadDataGrid x:Name="grid" SelectionUnit="Row" SelectionMode="Multiple" Grid.Row="1" AutoGenerateColumns="False" UserGroupMode="Disabled" UserColumnReorderMode="None" ItemsSource="{Binding}">
             <telerikGrid:RadDataGrid.Columns>
                 <telerikGrid:DataGridTextColumn Header="OBJECT NAME" PropertyName="Name" />
                 <telerikGrid:DataGridTextColumn Header="SIZE" PropertyName="Size" />
