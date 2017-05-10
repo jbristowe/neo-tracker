@@ -15,8 +15,9 @@ namespace NEOTracker.Views
 
             Loaded += async (s, e) =>
             {
-                var results = await CneosDataManager.GetCneosDataAsync();
-                var neos = results.Where(n => (n.CloseApproachDateTime - DateTime.Now).TotalDays < 30);
+                //var results = await CneosDataManager.GetCneosDataAsync();
+                //var neos = results.Where(n => (n.CloseApproachDateTime - DateTime.Now).TotalDays < 30);
+                var neos = await Data.Data.GetNEOs();
 
                 //var config = new WebRocks.WebRocksConfiguration(apiKey: Keys.NASAAPIKEY);
                 //var provider = new WebRocks.Requests.HttpClientNeoRequestProvider();
@@ -29,9 +30,9 @@ namespace NEOTracker.Views
                 {
                     neoData.Add(new NeoDataPoint()
                     {
-                        CloseApproachDateTime = neo.CloseApproachDateTime,
-                        EstimatedDiameter = neo.DiameterMaximum,
-                        MissDistance = neo.CloseApproachNominalDistance
+                        CloseApproachDateTime = neo.CloseApproaches.First().CloseApproachDateTime,
+                        EstimatedDiameter = neo.EstimatedDiameter.Meters.EstimatedDiameterMax,
+                        MissDistance = neo.CloseApproaches.First().MissDistance.Kilometers
                     });
                 }
 
