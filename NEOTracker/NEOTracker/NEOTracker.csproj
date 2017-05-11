@@ -133,6 +133,10 @@
     <AppxManifest Include="Package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
+    <Content Include="Assets\icons\noun_194715_cc_modified.png" />
+    <Content Include="Assets\icons\noun_398271_cc_modified.png" />
+    <Content Include="Assets\icons\noun_869484_cc_modified.png" />
+    <Content Include="Assets\icons\noun_94017_cc_modified.png" />
     <Content Include="Data\esa-list.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -145,14 +149,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\icons\18238_white.png" />
-    <Content Include="Assets\icons\568632_white.png" />
-    <Content Include="Assets\icons\noun_18238_cc.svg" />
-    <Content Include="Assets\icons\noun_695475_cc.png" />
-    <Content Include="Assets\icons\noun_705445_cc.png" />
-    <Content Include="Assets\icons\noun_705445_cc.svg" />
     <Content Include="Assets\icons\noun_705445_cc_modified.png" />
-    <Content Include="Assets\icons\noun_900888_cc.svg" />
-    <Content Include="Assets\icons\noun_923839_cc.png" />
     <Content Include="Assets\icons\noun_923839_cc_modified.png" />
     <Content Include="Assets\icons\noun_966844_cc_modified.png" />
     <Content Include="Assets\LargeTile.scale-100.png" />

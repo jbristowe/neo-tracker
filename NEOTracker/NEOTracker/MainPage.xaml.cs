@@ -21,10 +21,10 @@ namespace NEOTracker
             List<View> views = new List<View>();
             views.Add(new View() { Title = "Details", Icon = "ms-appx:///Assets/icons/noun_966844_cc_modified.png", PageType = typeof(MasterDetailViewPage) });
             views.Add(new View() { Title = "Space View", Icon = "ms-appx:///Assets/icons/noun_923839_cc_modified.png", PageType = typeof(SpaceViewPage) });
-            views.Add(new View() { Title = "Grid View", Icon = "ms-appx:///Assets/icons/noun_923839_cc_modified.png", PageType = typeof(GridViewPage) });
-            views.Add(new View() { Title = "Chart View", Icon = "ms-appx:///Assets/icons/noun_923839_cc_modified.png", PageType = typeof(ChartViewPage) });
-            views.Add(new View() { Title = "ESA Risk List", Icon = "ms-appx:///Assets/icons/noun_923839_cc_modified.png", PageType = typeof(EsaRiskListViewPage) });
-            views.Add(new View() { Title = "Torino Scale", Icon = "ms-appx:///Assets/icons/noun_923839_cc_modified.png", PageType = typeof(TorinoImpactHazardScaleViewPage) });
+            views.Add(new View() { Title = "Grid View", Icon = "ms-appx:///Assets/icons/noun_869484_cc_modified.png", PageType = typeof(GridViewPage) });
+            views.Add(new View() { Title = "Chart View", Icon = "ms-appx:///Assets/icons/noun_94017_cc_modified.png", PageType = typeof(ChartViewPage) });
+            views.Add(new View() { Title = "ESA Risk List", Icon = "ms-appx:///Assets/icons/noun_398271_cc_modified.png", PageType = typeof(EsaRiskListViewPage) });
+            views.Add(new View() { Title = "Torino Scale", Icon = "ms-appx:///Assets/icons/noun_194715_cc_modified.png", PageType = typeof(TorinoImpactHazardScaleViewPage) });
             Menu.ItemsSource = views;
 
             Menu.SelectedIndex = 0;

@@ -39,7 +39,7 @@ namespace NEOTracker.Views
 
         private void ui_markdownText_LinkClicked(object sender, Microsoft.Toolkit.Uwp.UI.Controls.LinkClickedEventArgs e)
         {
-
+            Windows.System.Launcher.LaunchUriAsync(new Uri(e.Link));
         }
     }
 }

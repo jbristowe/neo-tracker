@@ -8,12 +8,10 @@
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     mc:Ignorable="d">
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Grid>
         <ScrollViewer VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Disabled" Margin="12" BorderBrush="{ThemeResource AppBarBorderThemeBrush}" BorderThickness="2">
-            <controls:MarkdownTextBlock x:Name="markdown" 
-                                        Margin="6" 
-                                        Foreground="Black" 
-                                        LinkForeground="BlueViolet"
+            <controls:MarkdownTextBlock x:Name="markdown"
+                                        Margin="6"
                                         LinkClicked="ui_markdownText_LinkClicked"/>
         </ScrollViewer>
     </Grid>
