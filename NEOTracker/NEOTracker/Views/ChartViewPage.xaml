@@ -9,6 +9,9 @@
     mc:Ignorable="d">
     <Grid Margin="0,5,10,5">
         <telerik:RadPolarChart x:Name="chart">
+            <telerik:RadPolarChart.Behaviors>
+                <telerik:ChartTooltipBehavior />
+            </telerik:RadPolarChart.Behaviors>
             <telerik:RadPolarChart.Grid>
                 <telerik:PolarChartGrid GridLineVisibility="Radial" />
             </telerik:RadPolarChart.Grid>
