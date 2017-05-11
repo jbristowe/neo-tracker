@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Telerik.UI.Xaml.Controls.Chart;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 
@@ -15,23 +16,18 @@ namespace NEOTracker.Views
 
             Loaded += async (s, e) =>
             {
-                var results = await CneosDataManager.GetCneosDataAsync();
-                var neos = results.Where(n => (n.CloseApproachDateTime - DateTime.Now).TotalDays < 30);
-
-                //var config = new WebRocks.WebRocksConfiguration(apiKey: Keys.NASAAPIKEY);
-                //var provider = new WebRocks.Requests.HttpClientNeoRequestProvider();
-                //var client = new WebRocks.WebRocksClient(config, provider);
-                //var results = await client.GetFeedPageAsync(DateTime.Now);
-                //var neos = results.NearEarthObjects.Select(kv => kv.Value).SelectMany(n => n).Where(n => n.CloseApproaches.Count() > 0);
+                var neos = await Data.Data.GetNEOs();
+                var random = new Random();
 
                 var neoData = new List<NeoDataPoint>();
                 foreach (var neo in neos)
                 {
                     neoData.Add(new NeoDataPoint()
                     {
-                        CloseApproachDateTime = neo.CloseApproachDateTime,
-                        EstimatedDiameter = neo.DiameterMaximum,
-                        MissDistance = neo.CloseApproachNominalDistance
+                        CloseApproachDateTime = neo.CloseApproaches.First().CloseApproachDateTime,
+                        EstimatedDiameter = neo.EstimatedDiameter.Meters.EstimatedDiameterMax,
+                        MissDistance = neo.CloseApproaches.First().MissDistance.Kilometers,
+                        Angle = random.Next(0, 360)
                     });
                 }
 
@@ -39,10 +35,12 @@ namespace NEOTracker.Views
             };
         }
     }
+
     public class NeoDataPoint
     {
         public DateTime CloseApproachDateTime { get; set; }
         public float? EstimatedDiameter { get; set; }
         public float MissDistance { get; set; }
+        public int Angle { get; set;  }
     }
 }
