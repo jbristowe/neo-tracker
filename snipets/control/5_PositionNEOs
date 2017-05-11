@@ -1,0 +1,26 @@
+if (_canvas == null || _canvas.Children.Count == 0) return;
+var controlWidth = _canvas.ActualWidth;
+var controlHeight = _canvas.ActualHeight;
+
+double centerLeft(FrameworkElement element, double x) => (controlWidth / 2) + x - element.ActualWidth / 2;
+double centerTop(FrameworkElement element, double y) => (controlHeight / 2) - y - element.ActualHeight / 2;
+
+var maxDistance = Math.Min(controlWidth, controlHeight) / 2;
+var minDistance = Math.Min(maxDistance, 100 + MaxItemSize);
+
+var count = ItemsSource.Count();
+var angle = 2 * Math.PI / count;
+
+for (var i = 0; i < count; i++)
+{
+    var item = ItemsSource.ElementAt(i);
+    var element = _canvas.Children.ElementAt(i) as FrameworkElement;
+
+    var distance = (item.Distance) * (maxDistance - minDistance) + minDistance;
+
+    var x = distance * Math.Cos(angle * i);
+    var y = distance * Math.Sin(angle * i);
+
+    Canvas.SetTop(element, centerTop(element, y));
+    Canvas.SetLeft(element, centerLeft(element, x));
+}

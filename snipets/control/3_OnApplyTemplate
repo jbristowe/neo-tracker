@@ -1,0 +1,7 @@
+base.OnApplyTemplate();
+
+_canvas = (Canvas)GetTemplateChild("ItemCanvas");
+if (_canvas == null) throw new NullReferenceException();
+
+CreateNEOs();
+this.SizeChanged += (s, e) => PositionNEOs();

@@ -1,0 +1,1 @@
+<ListView ItemsSource="{x:Bind local:MasterDetailViewPage.GetNewsItems(Name)}" ItemTemplate="{StaticResource BingSchemaTemplate}"></ListView>

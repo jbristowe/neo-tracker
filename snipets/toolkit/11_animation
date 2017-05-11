@@ -1,0 +1,20 @@
+if (e.AddedItems.Count > 0 && e.AddedItems.First() is WebRocks.Data.NearEarthObject item)
+{
+    await Danger.Scale(0, 1, duration: 300).StartAsync();
+
+    if (item.IsPotentiallyHazardousAsteroid)
+    {
+        Danger.Fill = new SolidColorBrush(Colors.Red);
+        Danger.Fade(1, duration: 200).Scale(1, 1, duration: 200).Then()
+                .Fade(0, duration: 200).Then()
+                .Fade(1, duration: 200).Then()
+                .Fade(0, duration: 200).Then()
+                .Fade(1, duration: 500)
+                .Start();
+    }
+    else
+    {
+        Danger.Fill = new SolidColorBrush(Colors.Green);
+        Danger.Fade(1, duration: 300).Scale(1, 1, duration: 300).Start();
+    }
+}

@@ -1,0 +1,24 @@
+var control = d as SpaceView;
+
+NEO newItem;
+int newIndex;
+
+if (e.NewValue != null)
+{
+    newItem = e.NewValue as NEO;
+    newIndex = control.ItemsSource.ToList().IndexOf(newItem);
+    var newElement = control._canvas.Children.ElementAt(newIndex);
+    newElement.Fade(1f, control._animationDuration).Start();
+
+    foreach (var element in control._canvas.Children)
+    {
+        if (element != newElement) element.Fade(0.3f, control._animationDuration).Start();
+    }
+}
+else
+{
+    foreach (var element in control._canvas.Children)
+    {
+        element.Fade(1f, control._animationDuration).Start();
+    }
+}

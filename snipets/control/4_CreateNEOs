@@ -1,0 +1,17 @@
+if (_canvas == null) return;
+_canvas.Children.Clear();
+
+if (ItemsSource == null || ItemsSource.Count() == 0) return;
+
+foreach (var item in ItemsSource)
+{
+        
+    var element = new Ellipse();
+    element.Fill = this.Foreground;
+
+    element.Height = element.Width = (item.Diameter) * (MaxItemSize - MinItemSize) + MinItemSize;
+
+    _canvas.Children.Add(element);
+}
+
+PositionNEOs();

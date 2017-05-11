@@ -1,0 +1,3 @@
+this.IsTabStop = false;
+TabNavigation = KeyboardNavigationMode.Once;
+KeyDown += SpaceView_KeyDown;

@@ -1,0 +1,2 @@
+<Setter Property="IsFocusEngagementEnabled" Value="True"></Setter>
+<Setter Property="UseSystemFocusVisuals" Value="True"></Setter>

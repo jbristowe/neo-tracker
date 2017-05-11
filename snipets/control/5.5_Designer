@@ -1,0 +1,8 @@
+if (Windows.ApplicationModel.DesignMode.DesignModeEnabled)
+{
+    var items = new List<NEO>();
+    items.Add(new NEO() { Distance = 0.1, Diameter = 0.5, Label = "test" });
+    items.Add(new NEO() { Distance = 0.1, Diameter = 0.5, Label = "test" });
+    items.Add(new NEO() { Distance = 0.1, Diameter = 0.5, Label = "test" });
+    ItemsSource = items;
+}
