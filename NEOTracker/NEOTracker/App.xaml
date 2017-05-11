@@ -196,6 +196,39 @@
         <Style TargetType="controls:Expander">
             <Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>
         </Style>
+
+        <DataTemplate x:Key="BingSchemaTemplate">
+            <Grid Margin="0,5,10,5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0"
+                    Grid.Column="0"
+                    FontWeight="Bold"
+                    Text="{Binding Title}"
+                    TextTrimming="CharacterEllipsis" />
+                <TextBlock Grid.Row="0"
+                    Grid.Column="1"
+                    HorizontalAlignment="Right"
+                    Text="{Binding Published}" />
+                <TextBlock Grid.Row="1"
+                    Grid.Column="0"
+                    Grid.ColumnSpan="2"
+                    Text="{Binding Summary}"
+                    TextWrapping="Wrap" />
+                <HyperlinkButton Grid.Row="2"
+                            Grid.Column="0"
+                            Grid.ColumnSpan="2"
+                            Content="{Binding Link}"
+                            NavigateUri="{Binding Link}" />
+            </Grid>
+        </DataTemplate>
     </Application.Resources>
 
 </Application>
