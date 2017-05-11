@@ -1,0 +1,9 @@
+public DataTemplate ItemTemplate
+{
+    get { return (DataTemplate)GetValue(ItemTemplateProperty); }
+    set { SetValue(ItemTemplateProperty, value); }
+}
+
+// Using a DependencyProperty as the backing store for ItemTemplate.  This enables animation, styling, binding, etc...
+public static readonly DependencyProperty ItemTemplateProperty =
+    DependencyProperty.Register("ItemTemplate", typeof(DataTemplate), typeof(SpaceView), new PropertyMetadata(null));

@@ -1,0 +1,8 @@
+FrameworkElement element = ItemTemplate?.LoadContent() as FrameworkElement;
+
+
+
+
+var control = new ContentControl();
+control.Content = element;
+control.DataContext = item;

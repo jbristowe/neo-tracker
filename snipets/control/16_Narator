@@ -1,0 +1,1 @@
+control.SetValue(AutomationProperties.NameProperty, item.Label);

@@ -1,0 +1,2 @@
+<Canvas x:Name="ItemCanvas"></Canvas>
+<Ellipse Height="100" Width="100" Fill="Blue" VerticalAlignment="Center" HorizontalAlignment="Center"></Ellipse>

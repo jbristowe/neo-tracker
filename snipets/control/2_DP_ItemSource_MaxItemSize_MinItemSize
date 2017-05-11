@@ -1,0 +1,29 @@
+public IEnumerable<NEO> ItemsSource
+{
+    get { return (IEnumerable<NEO>)GetValue(ItemsSourceProperty); }
+    set { SetValue(ItemsSourceProperty, value); }
+}
+
+// Using a DependencyProperty as the backing store for ItemsSource.  This enables animation, styling, binding, etc...
+public static readonly DependencyProperty ItemsSourceProperty =
+    DependencyProperty.Register("ItemsSource", typeof(IEnumerable<NEO>), typeof(SpaceView), new PropertyMetadata(null));
+
+public double MaxItemSize
+{
+    get { return (double)GetValue(MaxItemSizeProperty); }
+    set { SetValue(MaxItemSizeProperty, value); }
+}
+
+// Using a DependencyProperty as the backing store for MaxItemSize.  This enables animation, styling, binding, etc...
+public static readonly DependencyProperty MaxItemSizeProperty =
+    DependencyProperty.Register("MaxItemSize", typeof(double), typeof(SpaceView), new PropertyMetadata(60d));
+
+public double MinItemSize
+{
+    get { return (double)GetValue(MinItemSizeProperty); }
+    set { SetValue(MinItemSizeProperty, value); }
+}
+
+// Using a DependencyProperty as the backing store for MinItemSize.  This enables animation, styling, binding, etc...
+public static readonly DependencyProperty MinItemSizeProperty =
+    DependencyProperty.Register("MinItemSize", typeof(double), typeof(SpaceView), new PropertyMetadata(10d));

@@ -1,0 +1,10 @@
+control.IsTabStop = true;
+control.UseSystemFocusVisuals = true;
+control.GotFocus += Control_GotFocus;
+control.LostFocus += Control_LostFocus; ;
+control.PointerEntered += Control_PointerEntered;
+control.PointerExited += Control_PointerExited;
+control.PointerPressed += Control_PointerPressed;
+control.PointerReleased += Control_PointerReleased;
+control.KeyDown += Control_KeyDown;
+control.KeyUp += Control_KeyUp;

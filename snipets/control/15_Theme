@@ -1,0 +1,2 @@
+<Setter Property="Background" Value="{ThemeResource SystemAltMediumColor}"></Setter>
+<Setter Property="Foreground" Value="{ThemeResource SystemBaseHighColor}"></Setter>

@@ -1,0 +1,4 @@
+public static IEnumerable<BingResult> GetNewsItems(string query)
+{
+
+}

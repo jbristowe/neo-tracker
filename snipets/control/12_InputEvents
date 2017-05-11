@@ -1,0 +1,64 @@
+#region Input
+
+private void Control_LostFocus(object sender, RoutedEventArgs e)
+{
+    var item = sender as ContentControl;
+    item.Scale(1, 1, (float)item.ActualWidth / 2, (float)item.ActualHeight / 2, _animationDuration).Start();
+}
+
+private void Control_GotFocus(object sender, RoutedEventArgs e)
+{
+    var item = sender as ContentControl;
+    item.Scale(2f, 2f, (float)item.ActualWidth / 2, (float)item.ActualHeight / 2, _animationDuration).Start();
+}
+
+private void Control_KeyUp(object sender, KeyRoutedEventArgs e)
+{
+    if (e.Key == Windows.System.VirtualKey.Enter || e.Key == Windows.System.VirtualKey.Space || e.Key == Windows.System.VirtualKey.GamepadA)
+    {
+        var item = sender as ContentControl;
+        item.Scale(2f, 2f, (float)item.ActualWidth / 2, (float)item.ActualHeight / 2, _animationDuration).Start();
+        SelectedItem = item.DataContext != SelectedItem ? item.DataContext as NEO : null;
+    }
+}
+
+private void Control_KeyDown(object sender, KeyRoutedEventArgs e)
+{
+    if (e.Key == Windows.System.VirtualKey.Enter || e.Key == Windows.System.VirtualKey.Space || e.Key == Windows.System.VirtualKey.GamepadA)
+    {
+        var item = sender as ContentControl;
+        item.Scale(1.1f, 1.1f, (float)item.ActualWidth / 2, (float)item.ActualHeight / 2, _animationDuration).Start();
+    }
+}
+
+private void Control_PointerReleased(object sender, PointerRoutedEventArgs e)
+{
+    var item = sender as ContentControl;
+    item.Scale(1, 1, (float)item.ActualWidth / 2, (float)item.ActualHeight / 2, _animationDuration).Start();
+    SelectedItem = item.DataContext != SelectedItem ? item.DataContext as NEO : null;
+}
+
+private void Control_PointerPressed(object sender, PointerRoutedEventArgs e)
+{
+    var item = sender as ContentControl;
+    item.Scale(0.9f, 0.9f, (float)item.ActualWidth / 2, (float)item.ActualHeight / 2, _animationDuration).Start();
+}
+
+private void Control_PointerExited(object sender, PointerRoutedEventArgs e)
+{
+    var item = sender as ContentControl;
+    item.Scale(1, 1, (float)item.ActualWidth / 2, (float)item.ActualHeight / 2, _animationDuration).Start();
+}
+
+private void Control_PointerEntered(object sender, PointerRoutedEventArgs e)
+{
+    var item = sender as ContentControl;
+    item.Scale(1.5f, 1.5f, (float)item.ActualWidth / 2, (float)item.ActualHeight / 2, _animationDuration).Start();
+
+    if (_canvas.Children.IndexOf(item) == 0)
+        item.Offset(r.Next(-50, 50), r.Next(-50, 50), 200).Start();
+}
+
+static Random r = new Random();
+
+#endregion

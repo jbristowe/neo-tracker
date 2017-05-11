@@ -1,0 +1,24 @@
+if (e.Key == Windows.System.VirtualKey.Left)
+{
+    e.Handled = true;
+    var currentEllement = FocusManager.GetFocusedElement() as ContentControl;
+    if (currentEllement != null)
+    {
+        var index = _canvas.Children.IndexOf(currentEllement);
+        var nextIndex = (index + 1) % _canvas.Children.Count;
+
+        (_canvas.Children.ElementAt(nextIndex) as ContentControl).Focus(FocusState.Keyboard);
+    }
+}
+else if (e.Key == Windows.System.VirtualKey.Right)
+{
+    e.Handled = true;
+    var currentEllement = FocusManager.GetFocusedElement() as ContentControl;
+    if (currentEllement != null)
+    {
+        var index = _canvas.Children.IndexOf(currentEllement);
+        var nextIndex = index > 0 ? index - 1 : _canvas.Children.Count - 1;
+
+        (_canvas.Children.ElementAt(nextIndex) as ContentControl).Focus(FocusState.Keyboard);
+    }
+}

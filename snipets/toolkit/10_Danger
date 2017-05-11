@@ -1,0 +1,6 @@
+<Grid.RowDefinitions>
+    <RowDefinition Height="8"></RowDefinition>
+    <RowDefinition Height="*"></RowDefinition>
+</Grid.RowDefinitions>
+
+<Rectangle x:Name="Danger" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"></Rectangle>
