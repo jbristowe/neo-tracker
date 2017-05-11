@@ -3,6 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:grid="using:Telerik.UI.Xaml.Controls.Grid"
     RequestedTheme="Dark">
     <Application.Resources>
         <Style TargetType="controls:MasterDetailsView">
@@ -39,7 +40,13 @@
                                                   Content="{TemplateBinding MasterHeader}"
                                                   ContentTemplate="{TemplateBinding MasterHeaderTemplate}"
                                                   Visibility="Collapsed" />
-                                    <ListView x:Name="MasterList"
+                                    <grid:RadDataGrid ItemsSource="{TemplateBinding ItemsSource}" 
+                                                      Grid.Row="1"
+                                                      IsTabStop="False"
+                                                      SelectedItem="{Binding SelectedItem, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}">
+                                        
+                                    </grid:RadDataGrid>
+                                    <!--<ListView x:Name="MasterList"
                                           Grid.Row="1"
                                           IsTabStop="False"
                                           ItemTemplate="{TemplateBinding ItemTemplate}"
@@ -61,7 +68,7 @@
                                                 </GroupStyle.HeaderTemplate>
                                             </GroupStyle>
                                         </ListView.GroupStyle>
-                                    </ListView>
+                                    </ListView>-->
                                     <Grid x:Name="MasterCommandBarPanel" Grid.Row="2"></Grid>
                                 </Grid>
                                 <Grid x:Name="DetailsPanel"
