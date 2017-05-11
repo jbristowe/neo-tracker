@@ -29,6 +29,13 @@ namespace NEOTracker.Views
 
         private void DrawAnnotations()
         {
+            var origin = chart.ConvertDataToPoint(Tuple.Create<object, object>(1E-08, 10000));
+            if (origin.X < 0)
+            {
+                chart.LayoutUpdated += Chart_LayoutUpdated;
+                return;
+            }
+
             chart.Annotations.Clear();
 
             chart.Annotations.Add(new CartesianMarkedZoneAnnotation() { HorizontalFrom = 1, HorizontalTo = 100, VerticalFrom = 1000, VerticalTo = 10000, Fill = new SolidColorBrush(Color.FromArgb(100, 255, 0, 0)) });
@@ -42,6 +49,12 @@ namespace NEOTracker.Views
             DrawTorinoImpactLevelFour();
             DrawTorinoImpactLevelFive();
             DrawTorinoImpactLevelSix();
+        }
+
+        private void Chart_LayoutUpdated(object sender, object e)
+        {
+            chart.LayoutUpdated -= Chart_LayoutUpdated;
+            DrawAnnotations();
         }
 
         private void DrawTorinoImpactLevelOne()
