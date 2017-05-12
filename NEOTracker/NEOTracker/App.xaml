@@ -5,6 +5,7 @@
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:grid="using:Telerik.UI.Xaml.Controls.Grid">
     <Application.Resources>
+        
         <Style TargetType="controls:MasterDetailsView">
             <Setter Property="Background" Value="{ThemeResource ApplicationPageBackgroundThemeBrush}" />
             <Setter Property="BorderBrush" Value="{ThemeResource ApplicationForegroundThemeBrush}" />

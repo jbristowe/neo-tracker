@@ -15,6 +15,7 @@
         <telerikChart:RadCartesianChart x:Name="chart" Grid.Row="0">
             <telerikChart:RadCartesianChart.Behaviors>
                 <telerikChart:ChartTooltipBehavior />
+                <telerikChart:ChartPanAndZoomBehavior ZoomMode="Horizontal" />
             </telerikChart:RadCartesianChart.Behaviors>
             <telerikChart:RadCartesianChart.VerticalAxis>
                 <telerikChart:LinearAxis Title="Palermo Scale (PS)" />
@@ -42,7 +43,7 @@
         <telerikGrid:RadDataGrid x:Name="grid" SelectionUnit="Row" SelectionMode="Multiple" Grid.Row="1" AutoGenerateColumns="False" UserGroupMode="Disabled" UserColumnReorderMode="None" ItemsSource="{Binding}">
             <telerikGrid:RadDataGrid.Columns>
                 <telerikGrid:DataGridTextColumn Header="OBJECT NAME" PropertyName="Name" />
-                <telerikGrid:DataGridTextColumn Header="SIZE" PropertyName="Size" />
+                <telerikGrid:DataGridNumericalColumn Header="SIZE" PropertyName="Size" />
                 <telerikGrid:DataGridDateColumn Header="DATE/TIME" PropertyName="CloseApproachDateTime" />
                 <telerikGrid:DataGridTextColumn Header="IP" PropertyName="IP" />
                 <telerikGrid:DataGridNumericalColumn Header="PS" PropertyName="PS" />
