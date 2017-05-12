@@ -21,11 +21,6 @@
             <telerik:RadPolarChart.RadialAxis>
                 <telerik:NumericalRadialAxis ShowLabels="False" />
             </telerik:RadPolarChart.RadialAxis>
-            <telerik:RadPolarChart.Annotations>
-                <telerik:PolarAxisPlotBandAnnotation From="0" To="5000000" Fill="Red" Opacity="0.3" />
-                <telerik:PolarAxisPlotBandAnnotation From="5000000" To="10000000" Fill="Orange" Opacity="0.3" />
-                <telerik:PolarAxisPlotBandAnnotation From="10000000" To="1000000000" Fill="Green" Opacity="0.3" />
-            </telerik:RadPolarChart.Annotations>
             <telerik:RadPolarChart.Series>
                 <telerik:PolarPointSeries ItemsSource="{Binding}">
                     <telerik:PolarPointSeries.ValueBinding>
