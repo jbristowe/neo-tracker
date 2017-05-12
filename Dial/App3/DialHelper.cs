@@ -16,40 +16,21 @@ namespace App3
 
         private static RadialController _controller;
 
-        public static RadialController Controller
-        {
-            get
-            {
-                return _controller;
-            }
-
-            set
-            {
-                _controller = value;
-            }
-        }
+        public static RadialController Controller;
         
-        /// <summary>
-        /// The amount the TextBox will be modified for each rotation step on the Surface Dial. This can be any double value.
-        /// </summary>
-        public static readonly DependencyProperty StepValueProperty =
-            DependencyProperty.RegisterAttached("StepValue", typeof(double), typeof(DialHelper), new PropertyMetadata(0d, new PropertyChangedCallback(StepValueChanged)));
 
-        /// <summary>
-        /// Setter of the StepValue.
-        /// </summary>
-        /// <param name="obj">The Depenency Object we are dealing with, like a TextBox.</param>
-        /// <returns>Return value of property</returns>
+        public static readonly DependencyProperty StepValueProperty =
+            DependencyProperty.RegisterAttached("StepValue", 
+                                                typeof(double), 
+                                                typeof(DialHelper), 
+                                                new PropertyMetadata(0d, StepValueChanged));
+        
+
         public static double GetStepValue(DependencyObject obj)
         {
             return (double)obj.GetValue(StepValueProperty);
         }
-
-        /// <summary>
-        /// Getter of the StepValue
-        /// </summary>
-        /// <param name="obj">The Depenency Object we are dealing with, like a TextBox.</param>
-        /// <param name="value">The value to set the property to.</param>
+        
         public static void SetStepValue(DependencyObject obj, double value)
         {
             obj.SetValue(StepValueProperty, value);
@@ -83,7 +64,7 @@ namespace App3
                 return;
             }
 
-            _control.Value += args.RotationDeltaInDegrees * GetStepValue(_control);
+            _control.Value += args.RotationDeltaInDegrees * GetStepValue(_control) / 5;
         }
     }
 }
