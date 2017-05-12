@@ -8,6 +8,8 @@ public IEnumerable<NEO> ItemsSource
 public static readonly DependencyProperty ItemsSourceProperty =
     DependencyProperty.Register("ItemsSource", typeof(IEnumerable<NEO>), typeof(SpaceView), new PropertyMetadata(null));
 
+
+
 public double MaxItemSize
 {
     get { return (double)GetValue(MaxItemSizeProperty); }
